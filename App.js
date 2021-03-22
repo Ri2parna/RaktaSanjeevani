@@ -1,14 +1,19 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
+import Screen from "./app/components/Screen";
 import HomeScreen from "./app/screens/HomeScreen";
 import StartScreen from "./app/screens/StartScreen";
+import AppStack from "./app/screens/AppStack";
+import AuthStack from "./app/screens/AuthStack";
 
 export default function App() {
+  const [LoggedIn, setLoggedIn] = useState(null);
   return (
-    <View style={styles.container}>
-      <HomeScreen />
-    </View>
+    <NavigationContainer>
+      {LoggedIn ? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
   );
 }
 
