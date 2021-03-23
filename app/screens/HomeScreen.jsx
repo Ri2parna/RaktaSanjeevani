@@ -46,17 +46,46 @@
 //   },
 // });
 
-import React from "react";
-import { View, Text, Button } from "react-native";
+import React, { useEffect } from "react";
+import { View, StyleSheet, Text, Button } from "react-native";
 import Screen from "../components/Screen";
 import Title from "../components/Title";
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
+  // prevents moving back to the login screen after succesful login
+  useEffect(() =>
+    navigation.addListener("beforeRemove", (e) => {
+      e.preventDefault();
+    })
+  );
   return (
     <Screen>
       <Title>HomeScreen</Title>
+      <View style={styles.flexRow}>
+        <Button
+          title="Make Requests"
+          onPress={() => navigation.navigate("MakeRequests")}
+        />
+        <Button
+          title="View Requests"
+          onPress={() => navigation.navigate("ViewRequests")}
+        />
+      </View>
+      <Button
+        title="Profile Screen"
+        onPress={() => navigation.navigate("Profile")}
+      />
     </Screen>
   );
 };
 
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  flexRow: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+  },
+});

@@ -2,13 +2,14 @@ import React from "react";
 import { View, Text, Button } from "react-native";
 import Screen from "../components/Screen";
 
-const MakeRequestsScreen = ({ navigation }) => {
+const UploadIDScreen = ({ navigation }) => {
   return (
     <Screen>
-      <Text>Make Requests Screen</Text>
+      <Text>Upload ID Screen</Text>
+      <Button title="Go Home" onPress={() => navigation.navigate("Home")} />
       <Button title="Go Back" onPress={() => navigation.goBack()} />
     </Screen>
   );
 };
 
-export default MakeRequestsScreen;
+export default UploadIDScreen;

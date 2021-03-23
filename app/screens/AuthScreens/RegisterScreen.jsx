@@ -2,16 +2,16 @@ import React from "react";
 import { View, Text, Button } from "react-native";
 import Screen from "../../components/Screen";
 
-const LoginScreen = ({ navigation }) => {
+const RegisterScreen = ({ navigation }) => {
   return (
     <Screen>
-      <Text>LoginScreen</Text>
+      <Text>Register Here</Text>
       <Button
-        title="Go to Verify OTP"
+        title="Verify OTP Next"
         onPress={() => navigation.navigate("OTPScreen")}
       />
     </Screen>
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
