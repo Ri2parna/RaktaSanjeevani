@@ -1,16 +1,21 @@
 import React from "react";
 import { View, StyleSheet, Text, Dimensions } from "react-native";
 
-const Screen = ({ children, ...props }) => {
-  return <View style={styles.container}>{children}</View>;
+const Screen = ({ children, color, ...props }) => {
+  return (
+    <View
+      style={[styles.container, { backgroundColor: color || "powderblue" }]}
+    >
+      {children}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
     alignItems: "center",
     justifyContent: "space-evenly",
-    minHeight: Dimensions.get("window").height,
+    height: Dimensions.get("window").height + 48, // 48 is added to padd the bottom soft navigation
     width: Dimensions.get("window").width,
   },
 });

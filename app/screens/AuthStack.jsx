@@ -8,9 +8,9 @@ import AppStack from "./AppStack";
 
 const Auth = createStackNavigator();
 
-const AuthStack = ({ navigation }) => {
+const AuthStack = () => {
   return (
-    <Auth.Navigator>
+    <Auth.Navigator screenOptions={{ headerShown: false }}>
       <Auth.Screen name="Start" component={StartScreen} />
       <Auth.Screen name="Login" component={LoginScreen} />
       <Auth.Screen name="Register" component={RegisterScreen} />
