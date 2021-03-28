@@ -47,9 +47,11 @@
 // });
 
 import React, { useEffect } from "react";
-import { View, StyleSheet, Text, Button } from "react-native";
-import Screen from "../components/Screen";
+import { View, StyleSheet, Button, Image } from "react-native";
+import Colors from "../config/colors";
 import Title from "../components/Title";
+import SubTitle from "../components/SubTitle";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const HomeScreen = ({ navigation }) => {
   // prevents moving back to the login screen after succesful login
@@ -59,23 +61,33 @@ const HomeScreen = ({ navigation }) => {
     })
   );
   return (
-    <Screen>
-      <Title>HomeScreen</Title>
-      <View style={styles.flexRow}>
+    <View style={{ height: "100%" }}>
+      <View style={{ flex: 1 }}>
+        <LocationCard />
+      </View>
+      <View
+        style={{
+          flex: 2,
+          backgroundColor: "coral",
+          justifyContent: "flex-end",
+        }}
+      >
+        <View style={styles.flexRow}>
+          <Button
+            title="Make Requests"
+            onPress={() => navigation.navigate("MakeRequests")}
+          />
+          <Button
+            title="View Requests"
+            onPress={() => navigation.navigate("ViewRequests")}
+          />
+        </View>
         <Button
-          title="Make Requests"
-          onPress={() => navigation.navigate("MakeRequests")}
-        />
-        <Button
-          title="View Requests"
-          onPress={() => navigation.navigate("ViewRequests")}
+          title="Profile Screen"
+          onPress={() => navigation.navigate("Profile")}
         />
       </View>
-      <Button
-        title="Profile Screen"
-        onPress={() => navigation.navigate("Profile")}
-      />
-    </Screen>
+    </View>
   );
 };
 
@@ -88,4 +100,75 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     width: "100%",
   },
+  locationCard: {
+    backgroundColor: Colors.primary,
+    flex: 1,
+    margin: 24,
+    borderRadius: 8,
+    padding: 28,
+  },
 });
+
+const LocationCard = () => {
+  return (
+    <View style={styles.locationCard}>
+      <SubTitle size={16} color={Colors.white}>
+        Location
+      </SubTitle>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Title size={28} color={Colors.white}>
+          Khanapara
+        </Title>
+        <Image
+          style={{ height: 20, width: 20 }}
+          source={require("../assets/map_marker.png")}
+        />
+      </View>
+      <Divider color={Colors.white} padding={16} />
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginTop: 16,
+        }}
+      >
+        <SubTitle color={`rgba(255,255,255, .7)`}>
+          Choose your blood group
+        </SubTitle>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "green",
+            padding: 4,
+            paddingHorizontal: 8,
+            borderRadius: 8,
+            backgroundColor: `rgba(255,255,255, .5)`,
+          }}
+        >
+          <Title size={20} color={Colors.white}>
+            A+
+          </Title>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
+const Divider = ({ color, size, padding }) => {
+  return (
+    <View
+      style={{
+        paddingTop: padding || 0,
+        borderBottomColor: color || "black",
+        borderBottomWidth: size || 0.2,
+        width: "80%",
+      }}
+    />
+  );
+};
