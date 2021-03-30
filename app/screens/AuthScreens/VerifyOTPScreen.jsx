@@ -6,6 +6,7 @@ import Screen from "../../components/Screen";
 import Title from "../../components/Title";
 import Colors from "../../config/colors";
 import CustomTextInput from "../../components/CustomTextInput";
+
 const VerifyOTPScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   return (
@@ -15,28 +16,7 @@ const VerifyOTPScreen = ({ navigation }) => {
         <CustomTextInput placeholder={"+91"} />
         <CustomTextInput placeholder={"Enter your phone number here"} />
       </View>
-      <LinearGradient
-        colors={["#ff217a", "#ff4d4d"]}
-        style={{
-          borderRadius: 28,
-          alignItems: "center",
-        }}
-      >
-        <TouchableOpacity
-          style={{
-            padding: 16,
-            paddingHorizontal: 32,
-            borderRadius: 28,
-            alignItems: "center",
-            backgroundColor: "red",
-          }}
-          onPress={() => setModalVisible(true)}
-        >
-          <Title size={20} color={Colors.white}>
-            Get OTP
-          </Title>
-        </TouchableOpacity>
-      </LinearGradient>
+      <StyledButton title="Send OTP" />
       <Button
         title="Fill in details"
         onPress={() => navigation.navigate("Details")}
@@ -46,3 +26,29 @@ const VerifyOTPScreen = ({ navigation }) => {
 };
 
 export default VerifyOTPScreen;
+
+const StyledButton = ({ title, onPress }) => {
+  return (
+    <LinearGradient
+      colors={["#ff217a", "#ff4d4d"]}
+      style={{
+        borderRadius: 28,
+        alignItems: "center",
+      }}
+    >
+      <TouchableOpacity
+        style={{
+          padding: 16,
+          paddingHorizontal: 32,
+          borderRadius: 28,
+          alignItems: "center",
+        }}
+        onPress={() => null}
+      >
+        <Title size={20} color={Colors.white}>
+          {title}
+        </Title>
+      </TouchableOpacity>
+    </LinearGradient>
+  );
+};

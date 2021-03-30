@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
-const CustomTextInput = ({ placeholder }) => {
+const CustomTextInput = ({ placeholder, padding, width, margin }) => {
   return (
     <TextInput
       placeholder={placeholder}
@@ -11,10 +11,12 @@ const CustomTextInput = ({ placeholder }) => {
         styles.shadow,
         {
           backgroundColor: `#f6f6f6`,
-          padding: 8,
+          padding: padding || 8,
           paddingHorizontal: 24,
           marginRight: 8,
           borderRadius: 816,
+          width: width,
+          margin: margin,
         },
       ]}
     />

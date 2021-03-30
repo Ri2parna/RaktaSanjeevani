@@ -1,7 +1,15 @@
 import React, { Children } from "react";
 import { View, Text } from "react-native";
 
-const Title = ({ children, color, center, paddingV = 0, size, ...props }) => {
+const Title = ({
+  children,
+  color,
+  center,
+  padding,
+  paddingV = 0,
+  size,
+  ...props
+}) => {
   return (
     <Text
       style={{
@@ -9,7 +17,9 @@ const Title = ({ children, color, center, paddingV = 0, size, ...props }) => {
         fontWeight: "bold",
         fontSize: size || 16,
         paddingVertical: paddingV,
-        textAlign: "center",
+        textAlign: center,
+        padding: padding,
+        flexWrap: "wrap",
       }}
     >
       {children}

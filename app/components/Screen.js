@@ -1,5 +1,12 @@
 import React from "react";
-import { View, StyleSheet, Text, Dimensions } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  Platform,
+  StatusBar,
+} from "react-native";
 
 const Screen = ({ children, color, ...props }) => {
   return (
@@ -15,8 +22,10 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "space-evenly",
-    height: Dimensions.get("window").height + 48, // 48 is added to padd the bottom soft navigation
+    height: Dimensions.get("window").height, // 48 is added to padd the bottom soft navigation
     width: Dimensions.get("window").width,
+    paddingBottom: 58,
+    // paddingTop: Platform.OS == "android" ? StatusBar.currentHeight : 0,
   },
 });
 
