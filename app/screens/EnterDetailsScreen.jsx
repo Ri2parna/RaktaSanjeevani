@@ -49,14 +49,14 @@ const EnterDetailsScreen = ({ navigation }) => {
           Select Blood Group
         </Title>
         <Container row>
-          <TextBubble placeholder="A+" />
-          <TextBubble placeholder="A-" />
-          <TextBubble placeholder="B-" />
-          <TextBubble placeholder="B+" selected />
-          <TextBubble placeholder="O+" />
-          <TextBubble placeholder="O-" />
-          <TextBubble placeholder="AB+" />
-          <TextBubble placeholder="AB-" />
+          <TextBubble placeholder="A+" padding={16} margin={8} />
+          <TextBubble placeholder="A-" padding={16} margin={8} />
+          <TextBubble placeholder="B-" padding={16} margin={8} />
+          <TextBubble placeholder="B+" padding={16} margin={8} selected />
+          <TextBubble placeholder="O+" padding={16} margin={8} />
+          <TextBubble placeholder="O-" padding={16} margin={8} />
+          <TextBubble placeholder="AB+" padding={16} margin={8} />
+          <TextBubble placeholder="AB-" padding={16} margin={8} />
         </Container>
         <View style={{ flex: 1 }} />
         <Container row>
@@ -76,7 +76,7 @@ const EnterDetailsScreen = ({ navigation }) => {
         <GradientButton
           title="SUBMIT"
           margin={8}
-          paddingV={20}
+          paddingV={16}
           onPress={() => navigation.navigate("AppStack")}
         />
       </View>

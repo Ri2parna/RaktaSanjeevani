@@ -5,9 +5,15 @@ import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../config/colors";
 import { StyleSheet } from "react-native";
 
-export const TextBubble = ({ placeholder, selected }) => {
+export const TextBubble = ({ placeholder, selected, padding, margin }) => {
   return (
-    <TouchableOpacity style={{ borderRadius: 80, padding: 8 }}>
+    <TouchableOpacity
+      style={{
+        borderRadius: 80,
+        padding: 2,
+        margin: margin,
+      }}
+    >
       <LinearGradient
         colors={
           selected ? ["#ff217a", "#ff4d4d"] : [Colors.white, Colors.white]
@@ -15,7 +21,7 @@ export const TextBubble = ({ placeholder, selected }) => {
         style={[
           {
             borderRadius: 80,
-            padding: 20,
+            padding: padding,
           },
           styles.shadow,
         ]}

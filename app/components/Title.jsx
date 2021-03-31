@@ -17,7 +17,7 @@ const Title = ({
         fontWeight: "bold",
         fontSize: size || 16,
         paddingVertical: paddingV,
-        textAlign: center,
+        textAlign: center && "center",
         padding: padding,
         flexWrap: "wrap",
       }}

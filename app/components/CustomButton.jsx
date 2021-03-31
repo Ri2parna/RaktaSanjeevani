@@ -7,21 +7,26 @@ import { Ionicons } from "@expo/vector-icons";
 
 export const CustomButton = ({
   title = "Placeholder",
+  margin,
+  padding,
+  color,
   onPress,
   icon,
   iconColor,
+  textSize,
 }) => {
   return (
     <TouchableOpacity
       style={[
         {
-          padding: 8,
+          padding: padding || 8,
           paddingHorizontal: 16,
           borderRadius: 24,
           backgroundColor: Colors.white,
           flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: icon ? "space-between" : "center",
           alignItems: "center",
+          margin: margin,
         },
         styles.shadow,
       ]}
@@ -34,7 +39,7 @@ export const CustomButton = ({
           color={iconColor || "black"}
         />
       ) : null}
-      <Title color={Colors.blood} size={20}>
+      <Title color={color || Colors.blood} size={textSize || 20} center>
         {title}
       </Title>
     </TouchableOpacity>

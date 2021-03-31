@@ -29,7 +29,7 @@ const StartScreen = ({ navigation }) => {
         <View style={{ flex: 1 }}></View>
         <View style={{ alignSelf: "flex-end" }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => navigation.navigate("OTPScreen")}
             style={{
               borderRadius: 60,
               shadowColor: "#000",
@@ -39,7 +39,6 @@ const StartScreen = ({ navigation }) => {
               },
               shadowOpacity: 0.23,
               shadowRadius: 2.62,
-
               elevation: 4,
             }}
           >
