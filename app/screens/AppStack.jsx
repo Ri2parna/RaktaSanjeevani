@@ -17,7 +17,7 @@ const AppStack = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          headerStyle: { backgroundColor: Colors.blood, elevation: 0 },
+          headerStyle: { backgroundColor: "#ff4d4d", elevation: 0 },
           headerTintColor: Colors.white,
           headerLeft: null,
           headerTitle: "RaktaSanjeevani",
@@ -29,7 +29,7 @@ const AppStack = () => {
         name="MakeRequests"
         component={MakeRequestsScreen}
         options={{
-          headerStyle: { backgroundColor: Colors.blood, elevation: 0 },
+          headerStyle: { backgroundColor: "#ff4d4d", elevation: 0 },
           headerTintColor: Colors.white,
           headerTitle: "Request for blood",
         }}

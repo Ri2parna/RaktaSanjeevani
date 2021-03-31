@@ -51,9 +51,8 @@ import { View, StyleSheet, Button, Image, Text } from "react-native";
 import Colors from "../config/colors";
 import Title from "../components/Title";
 import SubTitle from "../components/SubTitle";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { LinearGradient } from "react-native-svg";
-import { StyledButton } from "../components/StyledButton";
+import { LinearGradient } from "expo-linear-gradient";
+import { CustomButton } from "../components/CustomButton";
 
 const HomeScreen = ({ navigation }) => {
   // prevents moving back to the login screen after succesful login
@@ -64,12 +63,13 @@ const HomeScreen = ({ navigation }) => {
   );
   return (
     <View style={{ height: "100%", width: "100%" }}>
-      <View
+      <LinearGradient
+        colors={["#ff4d4d", "#ff217a"]}
         style={{
-          flex: 1,
-          padding: 8,
-          backgroundColor: Colors.blood,
+          width: "100%",
+          height: "100%",
           alignItems: "center",
+          flex: 1,
         }}
       >
         <View style={styles.cta}>
@@ -96,7 +96,8 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("ViewRequests")}
           />
         </View>
-      </View>
+      </LinearGradient>
+
       <View style={{ flex: 2, backgroundColor: "pink" }}></View>
     </View>
   );
@@ -104,7 +105,7 @@ const HomeScreen = ({ navigation }) => {
 
 export default HomeScreen;
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   flexRow: {
     display: "flex",
     flexDirection: "row",
@@ -133,31 +134,10 @@ const styles = StyleSheet.create({
     width: "86%",
     flex: 1,
     padding: 8,
-    backgroundColor: `rgba(255,255,255,.3)`,
+    backgroundColor: `rgba(255,255,255,.24)`,
     flexDirection: "row",
     borderRadius: 4,
     justifyContent: "space-around",
     alignItems: "center",
   },
 });
-
-const CustomButton = ({ title = "Placeholder", onPress }) => {
-  return (
-    <TouchableOpacity
-      style={[
-        {
-          padding: 8,
-          paddingHorizontal: 16,
-          borderRadius: 24,
-          backgroundColor: Colors.white,
-        },
-        styles.shadow,
-      ]}
-      onPress={onPress}
-    >
-      <Title color={Colors.blood} size={20}>
-        {title}
-      </Title>
-    </TouchableOpacity>
-  );
-};

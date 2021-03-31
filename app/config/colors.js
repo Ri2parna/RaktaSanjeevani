@@ -22,6 +22,7 @@ const Colors = {
   "grey-7": "#5E6C84",
   "grey-8": "#505F79",
   lightGray: "#D3D3D3",
-  blood: "#de2c2c",
+  blood: "#ff4d4d",
+  bloodRed: "#de2c2c",
 };
 export default Colors;

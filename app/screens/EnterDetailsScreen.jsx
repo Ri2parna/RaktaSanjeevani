@@ -12,7 +12,7 @@ import FemaleDarkLogo from "../assets/femaleUserDark.svg";
 import TransDarkLogo from "../assets/transUserDark.svg";
 import { Container } from "../components/Container";
 import { TextBubble } from "../components/TextBubble";
-import { StyledButton } from "../components/StyledButton";
+import { GradientButton } from "../components/GradientButton";
 
 const EnterDetailsScreen = ({ navigation }) => {
   return (
@@ -73,9 +73,10 @@ const EnterDetailsScreen = ({ navigation }) => {
             </Title>
           </View>
         </Container>
-        <StyledButton
+        <GradientButton
           title="SUBMIT"
           margin={8}
+          paddingV={20}
           onPress={() => navigation.navigate("AppStack")}
         />
       </View>
