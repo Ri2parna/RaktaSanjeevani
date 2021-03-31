@@ -1,8 +1,8 @@
 import React from "react";
-import { Button, CheckBox, Image, StyleSheet, Text, View } from "react-native";
+import { Button, CheckBox, Image, StyleSheet, View } from "react-native";
 import Screen from "../components/Screen";
 import Title from "../components/Title";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../config/colors";
 import CustomTextInput from "../components/CustomTextInput";
@@ -10,8 +10,11 @@ import WhiteMaleLogo from "../assets/maleUserWhite.svg";
 import DarkMaleLogo from "../assets/maleUserDark.svg";
 import FemaleDarkLogo from "../assets/femaleUserDark.svg";
 import TransDarkLogo from "../assets/transUserDark.svg";
+import { Container } from "../components/Container";
+import { TextBubble } from "../components/TextBubble";
+import { StyledButton } from "../components/StyledButton";
 
-const EnterDetailsScreen = () => {
+const EnterDetailsScreen = ({ navigation }) => {
   return (
     <Screen color={Colors.white}>
       <View
@@ -66,11 +69,15 @@ const EnterDetailsScreen = () => {
           >
             <CheckBox />
             <Title padding={12}>
-              Do you want to make you contact number visible for other
+              Do you want to make you contact number visible for others?
             </Title>
           </View>
         </Container>
-        <StyledButton title="SUBMIT" margin={8} />
+        <StyledButton
+          title="SUBMIT"
+          margin={8}
+          onPress={() => navigation.navigate("AppStack")}
+        />
       </View>
     </Screen>
   );
@@ -97,21 +104,6 @@ export const styles = StyleSheet.create({
   },
 });
 
-const Container = ({ children, row, column, ...props }) => {
-  return (
-    <View
-      style={{
-        padding: 8,
-        width: "100%",
-        flexDirection: (row && "row") || (column && "column"),
-        flexWrap: "wrap",
-      }}
-    >
-      {children}
-    </View>
-  );
-};
-
 const MaleLogo = ({ selected }) => {
   if (selected) {
     return (
@@ -120,13 +112,12 @@ const MaleLogo = ({ selected }) => {
         style={[
           {
             borderRadius: 80,
-            alignItems: "center",
           },
           styles.shadow,
         ]}
       >
         <TouchableOpacity style={[styles.buttonOutline]}>
-          <WhiteMaleLogo height={40} width={40} fill={Colors.white} />
+          <WhiteMaleLogo height={40} width={40} />
         </TouchableOpacity>
       </LinearGradient>
     );
@@ -139,7 +130,7 @@ const MaleLogo = ({ selected }) => {
           { backgroundColor: Colors.white },
         ]}
       >
-        <DarkMaleLogo height={40} width={40} fill={Colors.white} />
+        <DarkMaleLogo height={40} width={40} />
       </TouchableOpacity>
     );
   }
@@ -175,52 +166,4 @@ const FemaleLogo = ({ selected }) => {
       </TouchableOpacity>
     );
   }
-};
-
-const TextBubble = ({ placeholder, selected }) => {
-  return (
-    <LinearGradient
-      colors={selected ? ["#ff217a", "#ff4d4d"] : [Colors.white, Colors.white]}
-      style={[
-        {
-          borderRadius: 80,
-          margin: 8,
-        },
-        styles.shadow,
-      ]}
-    >
-      <TouchableOpacity style={{ borderRadius: 80, padding: 20 }}>
-        <Title size={20} color={selected ? Colors.white : "black"}>
-          {placeholder}
-        </Title>
-      </TouchableOpacity>
-    </LinearGradient>
-  );
-};
-
-const StyledButton = ({ margin, navigation, title, onPress }) => {
-  return (
-    <TouchableOpacity
-      style={{
-        borderRadius: 28,
-        alignItems: "center",
-        backgroundColor: "red",
-        width: "100%",
-      }}
-      onPress={() => null}
-    >
-      <LinearGradient
-        colors={["#ff217a", "#ff4d4d"]}
-        style={{
-          borderRadius: 28,
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
-        <Title size={20} color={Colors.white} paddingV={20}>
-          {title}
-        </Title>
-      </LinearGradient>
-    </TouchableOpacity>
-  );
 };

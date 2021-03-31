@@ -47,11 +47,13 @@
 // });
 
 import React, { useEffect } from "react";
-import { View, StyleSheet, Button, Image } from "react-native";
+import { View, StyleSheet, Button, Image, Text } from "react-native";
 import Colors from "../config/colors";
 import Title from "../components/Title";
 import SubTitle from "../components/SubTitle";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { LinearGradient } from "react-native-svg";
+import { StyledButton } from "../components/StyledButton";
 
 const HomeScreen = ({ navigation }) => {
   // prevents moving back to the login screen after succesful login
@@ -61,32 +63,41 @@ const HomeScreen = ({ navigation }) => {
     })
   );
   return (
-    <View style={{ height: "100%" }}>
-      <View style={{ flex: 1 }}>
-        <LocationCard />
-      </View>
+    <View style={{ height: "100%", width: "100%" }}>
       <View
         style={{
-          flex: 2,
-          backgroundColor: "coral",
-          justifyContent: "flex-end",
+          flex: 1,
+          padding: 8,
+          backgroundColor: Colors.blood,
+          alignItems: "center",
         }}
       >
-        <View style={styles.flexRow}>
-          <Button
-            title="Make Requests"
+        <View style={styles.cta}>
+          <View style={{ alignItems: "center" }}>
+            <Title color={Colors.white} size={24}>
+              19563
+            </Title>
+            <SubTitle color={Colors.white}>Donors</SubTitle>
+          </View>
+          <CustomButton
+            title="Find Donors"
             onPress={() => navigation.navigate("MakeRequests")}
           />
-          <Button
-            title="View Requests"
+        </View>
+        <View style={styles.cta}>
+          <View style={{ alignItems: "center" }}>
+            <Title color={Colors.white} size={24}>
+              56778
+            </Title>
+            <SubTitle color={Colors.white}>Requests</SubTitle>
+          </View>
+          <CustomButton
+            title="See Requests"
             onPress={() => navigation.navigate("ViewRequests")}
           />
         </View>
-        <Button
-          title="Profile Screen"
-          onPress={() => navigation.navigate("Profile")}
-        />
       </View>
+      <View style={{ flex: 2, backgroundColor: "pink" }}></View>
     </View>
   );
 };
@@ -107,68 +118,46 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 28,
   },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 3,
+  },
+  cta: {
+    margin: 8,
+    width: "86%",
+    flex: 1,
+    padding: 8,
+    backgroundColor: `rgba(255,255,255,.3)`,
+    flexDirection: "row",
+    borderRadius: 4,
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
 });
 
-const LocationCard = () => {
+const CustomButton = ({ title = "Placeholder", onPress }) => {
   return (
-    <View style={styles.locationCard}>
-      <SubTitle size={16} color={Colors.white}>
-        Location
-      </SubTitle>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Title size={28} color={Colors.white}>
-          Khanapara
-        </Title>
-        <Image
-          style={{ height: 20, width: 20 }}
-          source={require("../assets/map_marker.png")}
-        />
-      </View>
-      <Divider color={Colors.white} padding={16} />
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginTop: 16,
-        }}
-      >
-        <SubTitle color={`rgba(255,255,255, .7)`}>
-          Choose your blood group
-        </SubTitle>
-        <TouchableOpacity
-          style={{
-            backgroundColor: "green",
-            padding: 4,
-            paddingHorizontal: 8,
-            borderRadius: 8,
-            backgroundColor: `rgba(255,255,255, .5)`,
-          }}
-        >
-          <Title size={20} color={Colors.white}>
-            A+
-          </Title>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
-
-const Divider = ({ color, size, padding }) => {
-  return (
-    <View
-      style={{
-        paddingTop: padding || 0,
-        borderBottomColor: color || "black",
-        borderBottomWidth: size || 0.2,
-        width: "80%",
-      }}
-    />
+    <TouchableOpacity
+      style={[
+        {
+          padding: 8,
+          paddingHorizontal: 16,
+          borderRadius: 24,
+          backgroundColor: Colors.white,
+        },
+        styles.shadow,
+      ]}
+      onPress={onPress}
+    >
+      <Title color={Colors.blood} size={20}>
+        {title}
+      </Title>
+    </TouchableOpacity>
   );
 };

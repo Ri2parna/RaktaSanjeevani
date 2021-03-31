@@ -1,26 +1,32 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { LinearGradient } from "react-native-svg";
-import Colors from "../config/colors";
 import Title from "./Title";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { LinearGradient } from "expo-linear-gradient";
+import Colors from "../config/colors";
 
-const StyledButton = ({ title, navigation, onPress }) => {
+export const StyledButton = ({ margin, navigation, title, onPress }) => {
   return (
     <TouchableOpacity
       style={{
-        padding: 16,
-        paddingHorizontal: 32,
         borderRadius: 28,
         alignItems: "center",
+        backgroundColor: "red",
+        width: "100%",
       }}
-      onPress={() => setModalVisible(true)}
+      onPress={onPress}
     >
-      <Title size={20} color={Colors.white}>
-        {title}
-      </Title>
+      <LinearGradient
+        colors={["#ff217a", "#ff4d4d"]}
+        style={{
+          borderRadius: 28,
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <Title size={20} color={Colors.white} paddingV={20}>
+          {title}
+        </Title>
+      </LinearGradient>
     </TouchableOpacity>
   );
 };
-export default StyledButton;
-
-const styles = StyleSheet.create({});
