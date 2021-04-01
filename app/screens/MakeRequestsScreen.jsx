@@ -8,6 +8,7 @@ import Title from "../components/Title";
 import SubTitle from "../components/SubTitle";
 import { CustomButton } from "../components/CustomButton";
 import { TextBubble } from "../components/TextBubble";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const MakeRequestsScreen = ({ navigation }) => {
   return (
@@ -53,7 +54,7 @@ const MakeRequestsScreen = ({ navigation }) => {
             styles.shadow,
           ]}
         >
-          <RequestCard />
+          <RequestCard onPress={() => navigation.navigate("RequestDetails")} />
         </View>
       </View>
     </Screen>
@@ -64,8 +65,7 @@ export default MakeRequestsScreen;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.white,
-    height: 140,
-    padding: 8,
+    padding: 16,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -100,21 +100,20 @@ const styles = StyleSheet.create({
   },
 });
 
-const RequestCard = () => {
+const RequestCard = ({ navigation, onPress }) => {
   return (
-    <View style={[styles.container, styles.shadow]}>
+    <TouchableOpacity
+      style={[styles.container, styles.shadow]}
+      onPress={onPress}
+    >
       <View style={styles.image} />
       <View style={{ margin: 4, padding: 4 }}>
         <Title size={20}>Alexandra Daddario</Title>
         <SubTitle size={18}>Location</SubTitle>
-        <CustomButton
-          title="Accept Request"
-          margin={4}
-          padding={4}
-          textSize={20}
-        />
+        <SubTitle size={18}>6 units</SubTitle>
+        <SubTitle size={18}>Date</SubTitle>
       </View>
       <TextBubble placeholder="AB+" padding={12} selected />
-    </View>
+    </TouchableOpacity>
   );
 };

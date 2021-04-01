@@ -35,7 +35,15 @@ const AppStack = () => {
         }}
       />
       <Stack.Screen name="ViewRequests" component={ViewRequestsScreen} />
-      <Stack.Screen name="RequestDetails" component={RequestDetailsScreen} />
+      <Stack.Screen
+        name="RequestDetails"
+        component={RequestDetailsScreen}
+        options={{
+          // headerStyle: { backgroundColor: "#ff4d4d", elevation: 0 },
+          // headerTintColor: Colors.white,
+          headerTitle: "Request Details",
+        }}
+      />
     </Stack.Navigator>
   );
 };
