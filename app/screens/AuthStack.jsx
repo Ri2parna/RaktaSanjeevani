@@ -6,6 +6,7 @@ import VerifyOTPScreen from "./AuthScreens/VerifyOTPScreen";
 import RegisterScreen from "./AuthScreens/RegisterScreen";
 import AppStack from "./AppStack";
 import EnterDetailsScreen from "./EnterDetailsScreen";
+import NewRequest from "./NewRequest";
 
 const Auth = createStackNavigator();
 
@@ -25,6 +26,14 @@ const AuthStack = () => {
         name="Details"
         component={EnterDetailsScreen}
         options={{ headerShown: true }}
+      />
+      <Auth.Screen
+        name="NewRequest"
+        component={NewRequest}
+        options={{
+          headerShown: true,
+          headerTitle: "Make New Request",
+        }}
       />
     </Auth.Navigator>
   );

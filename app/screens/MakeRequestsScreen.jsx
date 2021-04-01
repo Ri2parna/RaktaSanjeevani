@@ -33,7 +33,7 @@ const MakeRequestsScreen = ({ navigation }) => {
               title="Add Request"
               icon="add"
               iconColor={Colors.blood}
-              onPress={() => navigation.navigate("MakeRequests")}
+              onPress={() => navigation.navigate("NewRequest")}
               padding={8}
             />
           </View>
@@ -108,13 +108,13 @@ const RequestCard = () => {
         <Title size={20}>Alexandra Daddario</Title>
         <SubTitle size={18}>Location</SubTitle>
         <CustomButton
-          title="Ask for Help"
+          title="Accept Request"
           margin={4}
-          padding={2}
+          padding={4}
           textSize={20}
         />
       </View>
-      <TextBubble placeholder="AB+" padding={12} />
+      <TextBubble placeholder="AB+" padding={12} selected />
     </View>
   );
 };

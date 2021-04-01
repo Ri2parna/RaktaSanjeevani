@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Button, StyleSheet, Text, Image } from "react-native";
+import { Image, ImageBackground, StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Screen from "../components/Screen";
 import SubTitle from "../components/SubTitle";
@@ -9,25 +9,31 @@ import Colors from "../config/colors";
 const StartScreen = ({ navigation }) => {
   return (
     <Screen>
-      <View style={styles.flexCenter}>
-        <Image
-          style={{ height: 80, resizeMode: "contain" }}
-          source={require("../assets/sanjeevaniLogo2.png")}
-        />
-      </View>
-      <View style={styles.logo}>
-        <Title color={Colors.error} size={28}>
-          Your Blood can save lives,
-        </Title>
-        <View style={{ height: 24, width: "100%" }} />
-        <Title color="coral" size={20}>
-          Thank you for coming forward!
-        </Title>
-        <SubTitle color="#788A99" size={16}>
-          Lets get you started.
-        </SubTitle>
-        <View style={{ flex: 1 }}></View>
-        <View style={{ alignSelf: "flex-end" }}>
+      <ImageBackground
+        source={require("../assets/startBackground.jpg")}
+        style={{
+          height: "100%",
+          width: "100%",
+        }}
+      >
+        <View style={styles.flexCenter}>
+          <Image
+            style={{ height: 80, resizeMode: "contain" }}
+            source={require("../assets/sanjeevaniLogo2.png")}
+          />
+        </View>
+        <View style={{ padding: 8 }}>
+          <Title color={Colors.error} size={28}>
+            Your Blood can save lives,
+          </Title>
+          <Title color="coral" size={20}>
+            Thank you for coming forward!
+          </Title>
+          <SubTitle color="#788A99" size={16}>
+            Now, Lets get you started.
+          </SubTitle>
+        </View>
+        <View style={{ alignSelf: "flex-end", margin: 16 }}>
           <TouchableOpacity
             onPress={() => navigation.navigate("OTPScreen")}
             style={{
@@ -51,7 +57,7 @@ const StartScreen = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
-      </View>
+      </ImageBackground>
     </Screen>
   );
 };
@@ -64,28 +70,5 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-  },
-  flexRow: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%",
-    backgroundColor: "coral",
-  },
-  logo: {
-    flex: 1,
-    borderTopLeftRadius: 48,
-    width: "100%",
-    padding: 28,
-    paddingTop: 32,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    elevation: 3,
-    backgroundColor: "white",
   },
 });
