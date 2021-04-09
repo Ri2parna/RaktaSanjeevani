@@ -46,13 +46,15 @@
 //   },
 // });
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Button, Image, Text } from "react-native";
 import Colors from "../config/colors";
 import Title from "../components/Title";
 import SubTitle from "../components/SubTitle";
 import { LinearGradient } from "expo-linear-gradient";
 import { CustomButton } from "../components/CustomButton";
+
+import { api } from "../config/endpoints";
 
 const HomeScreen = ({ navigation }) => {
   // prevents moving back to the login screen after succesful login
@@ -61,6 +63,15 @@ const HomeScreen = ({ navigation }) => {
       e.preventDefault();
     })
   );
+
+  const [donorCount, setDonorCount] = useState(0);
+  const [requestCount, setRequestCount] = useState(0);
+  api
+    .get("/blood/donor/count")
+    .then(({ data }) => setDonorCount(data[0]["count"]));
+  api
+    .get("/blood/request/count")
+    .then(({ data }) => setRequestCount(data[0]["count"]));
   return (
     <View style={{ height: "100%", width: "100%" }}>
       <LinearGradient
@@ -75,7 +86,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.cta}>
           <View style={{ alignItems: "center" }}>
             <Title color={Colors.white} size={24}>
-              19563
+              {donorCount}
             </Title>
             <SubTitle color={Colors.white}>Donors</SubTitle>
           </View>
@@ -87,7 +98,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.cta}>
           <View style={{ alignItems: "center" }}>
             <Title color={Colors.white} size={24}>
-              56778
+              {requestCount}
             </Title>
             <SubTitle color={Colors.white}>Requests</SubTitle>
           </View>

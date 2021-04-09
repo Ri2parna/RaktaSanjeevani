@@ -6,6 +6,7 @@ import UploadIDScreen from "./UploadIDScreen";
 import MakeRequestsScreen from "./MakeRequestsScreen";
 import ViewRequestsScreen from "./ViewRequestsScreen";
 import RequestDetailsScreen from "./RequestDetailsScreen";
+import NewRequest from "./NewRequest";
 import Colors from "../config/colors";
 
 const Stack = createStackNavigator();
@@ -34,6 +35,7 @@ const AppStack = () => {
           headerTitle: "Request for blood",
         }}
       />
+      <Stack.Screen name="NewRequest" component={NewRequest} />
       <Stack.Screen name="ViewRequests" component={ViewRequestsScreen} />
       <Stack.Screen
         name="RequestDetails"

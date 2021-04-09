@@ -1,16 +1,28 @@
-import React from "react";
-import { View, Text, Button, StyleSheet, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet } from "react-native";
 import Colors from "../config/colors";
 import Screen from "../components/Screen";
 import { LinearGradient } from "expo-linear-gradient";
-import { GradientButton } from "../components/GradientButton";
 import Title from "../components/Title";
 import SubTitle from "../components/SubTitle";
 import { CustomButton } from "../components/CustomButton";
 import { TextBubble } from "../components/TextBubble";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-const MakeRequestsScreen = ({ navigation }) => {
+import { api } from "../config/endpoints";
+
+const MakeRequestsScreen = ({ navigation, city = "Tezpur" }) => {
+  const [requestCount, setRequestCount] = useState(0);
+  const [ListOfDonors, setListOfDonors] = useState([]);
+  useEffect(() => {
+    api
+      .get("/blood/request/count")
+      .then(({ data }) => setRequestCount(data[0]["count"]));
+    api.get("/users/data/list/donors/" + city).then(({ data }) => {
+      console.log(data);
+      setListOfDonors(data);
+    });
+  }, []);
   return (
     <Screen color={Colors.white}>
       <View style={{ width: "100%", height: "100%" }}>
@@ -26,7 +38,7 @@ const MakeRequestsScreen = ({ navigation }) => {
           <View style={styles.cta}>
             <View style={{ alignItems: "center" }}>
               <Title color={Colors.white} size={24}>
-                19563
+                {requestCount}
               </Title>
               <SubTitle color={Colors.white}>Active Requests</SubTitle>
             </View>
@@ -40,7 +52,7 @@ const MakeRequestsScreen = ({ navigation }) => {
           </View>
         </LinearGradient>
         <Title size={20} paddingV={8} padding={8} color="#0A0819">
-          Recent Requests
+          Donors Nearby
         </Title>
         <View
           style={[
@@ -54,7 +66,10 @@ const MakeRequestsScreen = ({ navigation }) => {
             styles.shadow,
           ]}
         >
-          <RequestCard onPress={() => navigation.navigate("RequestDetails")} />
+          <RequestCard
+            {...ListOfDonors[1]}
+            onPress={() => navigation.navigate("RequestDetails")}
+          />
         </View>
       </View>
     </Screen>
@@ -100,7 +115,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const RequestCard = ({ navigation, onPress }) => {
+const RequestCard = ({
+  navigation,
+  onPress,
+  name = "Test",
+  city = "N/A",
+  blood = "N/A",
+}) => {
   return (
     <TouchableOpacity
       style={[styles.container, styles.shadow]}
@@ -108,12 +129,28 @@ const RequestCard = ({ navigation, onPress }) => {
     >
       <View style={styles.image} />
       <View style={{ margin: 4, padding: 4 }}>
-        <Title size={20}>Alexandra Daddario</Title>
-        <SubTitle size={18}>Location</SubTitle>
-        <SubTitle size={18}>6 units</SubTitle>
-        <SubTitle size={18}>Date</SubTitle>
+        <Title size={20}>{name}</Title>
+        <SubTitle size={18}>{city}</SubTitle>
       </View>
-      <TextBubble placeholder="AB+" padding={12} selected />
+      <TextBubble placeholder={blood} padding={12} selected />
     </TouchableOpacity>
   );
 };
+
+// const RequestCard = ({ navigation, onPress }) => {
+//   return (
+//     <TouchableOpacity
+//       style={[styles.container, styles.shadow]}
+//       onPress={onPress}
+//     >
+//       <View style={styles.image} />
+//       <View style={{ margin: 4, padding: 4 }}>
+//         <Title size={20}>Alexandra Daddario</Title>
+//         <SubTitle size={18}>Location</SubTitle>
+//         <SubTitle size={18}>6 units</SubTitle>
+//         <SubTitle size={18}>Date</SubTitle>
+//       </View>
+//       <TextBubble placeholder="AB+" padding={12} selected />
+//     </TouchableOpacity>
+//   );
+// };

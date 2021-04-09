@@ -22,19 +22,7 @@ const AuthStack = () => {
         component={AppStack}
         options={{ headerShown: false }}
       />
-      <Auth.Screen
-        name="Details"
-        component={EnterDetailsScreen}
-        options={{ headerShown: true }}
-      />
-      <Auth.Screen
-        name="NewRequest"
-        component={NewRequest}
-        options={{
-          headerShown: true,
-          headerTitle: "Make New Request",
-        }}
-      />
+      <Auth.Screen name="Details" component={EnterDetailsScreen} />
     </Auth.Navigator>
   );
 };
