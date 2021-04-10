@@ -2,10 +2,27 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
-const CustomTextInput = ({ placeholder, padding, width, margin }) => {
+const CustomTextInput = ({
+  placeholder,
+  padding,
+  width,
+  margin,
+  autoFocus,
+  autoCompleteType,
+  keyboardType,
+  textContentType,
+  editable,
+  onChangeText,
+}) => {
   return (
     <TextInput
+      autoFocus={autoFocus}
+      autoCompleteType={autoCompleteType}
+      keyboardType={keyboardType}
+      textContentType={textContentType}
+      editable={editable}
       placeholder={placeholder}
+      onChangeText={onChangeText}
       placeholderTextColor="#a2a2a2"
       style={[
         styles.shadow,
