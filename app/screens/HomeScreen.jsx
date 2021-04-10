@@ -57,21 +57,25 @@ import { CustomButton } from "../components/CustomButton";
 import { api } from "../config/endpoints";
 
 const HomeScreen = ({ navigation }) => {
+  const [donorCount, setDonorCount] = useState(0);
+  const [requestCount, setRequestCount] = useState(0);
+
+  useEffect(() => {
+    api
+      .get("/blood/donor/count")
+      .then(({ data }) => setDonorCount(data[0]["count"]))
+      .catch(() => console.warn("Error while quering network data"));
+    api
+      .get("/blood/request/count")
+      .then(({ data }) => setRequestCount(data[0]["count"]))
+      .catch(() => console.warn("Error while quering network data"));
+  }, []);
   // prevents moving back to the login screen after succesful login
   useEffect(() =>
     navigation.addListener("beforeRemove", (e) => {
       e.preventDefault();
     })
   );
-
-  const [donorCount, setDonorCount] = useState(0);
-  const [requestCount, setRequestCount] = useState(0);
-  api
-    .get("/blood/donor/count")
-    .then(({ data }) => setDonorCount(data[0]["count"]));
-  api
-    .get("/blood/request/count")
-    .then(({ data }) => setRequestCount(data[0]["count"]));
   return (
     <View style={{ height: "100%", width: "100%" }}>
       <LinearGradient
