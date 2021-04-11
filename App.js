@@ -4,7 +4,7 @@ import AppStack from "./app/screens/AppStack";
 import AuthStack from "./app/screens/AuthStack";
 
 export default function App() {
-  const [LoggedIn, setLoggedIn] = useState(true);
+  const [LoggedIn, setLoggedIn] = useState(false);
   return (
     <NavigationContainer>
       {LoggedIn ? <AppStack /> : <AuthStack />}

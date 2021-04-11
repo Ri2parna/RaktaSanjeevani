@@ -2,17 +2,14 @@ import React, { useState } from "react";
 import { Button, CheckBox, Image, StyleSheet, View } from "react-native";
 import Screen from "../components/Screen";
 import Title from "../components/Title";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../config/colors";
 import CustomTextInput from "../components/CustomTextInput";
-import WhiteMaleLogo from "../assets/maleUserWhite.svg";
-import DarkMaleLogo from "../assets/maleUserDark.svg";
-import FemaleDarkLogo from "../assets/femaleUserDark.svg";
 import TransDarkLogo from "../assets/transUserDark.svg";
 import { Container } from "../components/Container";
 import { TextBubble } from "../components/TextBubble";
 import { GradientButton } from "../components/GradientButton";
+import { MaleLogo } from "../components/MaleLogo";
+import { FemaleLogo } from "../components/FemaleLogo";
 
 const NewRequest = ({ navigation, route }) => {
   const [bloodType, setBloodType] = useState(null);
@@ -175,43 +172,3 @@ export const styles = StyleSheet.create({
     borderRadius: 80,
   },
 });
-
-const MaleLogo = ({ selected, onPress }) => {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[styles.buttonOutline, styles.shadow]}
-    >
-      <LinearGradient
-        colors={
-          selected ? ["#ff217a", "#ff4d4d"] : [Colors.white, Colors.white]
-        }
-        style={[styles.buttonOutline, styles.shadow, { padding: 24 }]}
-      >
-        {selected ? (
-          <WhiteMaleLogo height={40} width={40} />
-        ) : (
-          <DarkMaleLogo height={40} width={40} />
-        )}
-      </LinearGradient>
-    </TouchableOpacity>
-  );
-};
-
-const FemaleLogo = ({ selected, onPress }) => {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[styles.buttonOutline, styles.shadow, { margin: 8 }]}
-    >
-      <LinearGradient
-        colors={
-          selected ? ["#ff217a", "#ff4d4d"] : [Colors.white, Colors.white]
-        }
-        style={[styles.buttonOutline, styles.shadow, { padding: 24 }]}
-      >
-        <FemaleDarkLogo height={40} width={40} />
-      </LinearGradient>
-    </TouchableOpacity>
-  );
-};

@@ -1,20 +1,20 @@
-import React from "react";
-import { Button, CheckBox, Image, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { CheckBox, View } from "react-native";
 import Screen from "../components/Screen";
 import Title from "../components/Title";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../config/colors";
 import CustomTextInput from "../components/CustomTextInput";
-import WhiteMaleLogo from "../assets/maleUserWhite.svg";
-import DarkMaleLogo from "../assets/maleUserDark.svg";
-import FemaleDarkLogo from "../assets/femaleUserDark.svg";
-import TransDarkLogo from "../assets/transUserDark.svg";
 import { Container } from "../components/Container";
 import { TextBubble } from "../components/TextBubble";
 import { GradientButton } from "../components/GradientButton";
+import { MaleLogo } from "../components/MaleLogo";
+import { FemaleLogo } from "../components/FemaleLogo";
 
 const EnterDetailsScreen = ({ navigation }) => {
+  const [name, setName] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [gender, setGender] = useState(null);
+  const [bloodType, setBloodType] = useState(null);
   return (
     <Screen color={Colors.white}>
       <View
@@ -30,33 +30,89 @@ const EnterDetailsScreen = ({ navigation }) => {
             width="90%"
             margin={8}
             padding={16}
+            onChangeText={(name) => setName(name)}
           />
           <CustomTextInput
             placeholder="Email"
             width="90%"
             margin={8}
             padding={16}
+            onChangeText={(email) => setEmail(email)}
           />
         </Container>
         <Title size={24} padding={16}>
           Gender
         </Title>
         <Container row>
-          <MaleLogo selected />
-          <FemaleLogo />
+          <MaleLogo
+            selected={gender == "male"}
+            onPress={() => setGender("male")}
+          />
+          <FemaleLogo
+            selected={gender == "female"}
+            onPress={() => setGender("female")}
+          />
         </Container>
         <Title size={24} padding={16}>
           Select Blood Group
         </Title>
         <Container row>
-          <TextBubble placeholder="A+" padding={16} margin={8} />
-          <TextBubble placeholder="A-" padding={16} margin={8} />
-          <TextBubble placeholder="B-" padding={16} margin={8} />
-          <TextBubble placeholder="B+" padding={16} margin={8} selected />
-          <TextBubble placeholder="O+" padding={16} margin={8} />
-          <TextBubble placeholder="O-" padding={16} margin={8} />
-          <TextBubble placeholder="AB+" padding={16} margin={8} />
-          <TextBubble placeholder="AB-" padding={16} margin={8} />
+          <TextBubble
+            placeholder="A+"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("A+")}
+            selected={bloodType == "A+"}
+          />
+          <TextBubble
+            placeholder="A-"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("A-")}
+            selected={bloodType == "A-"}
+          />
+          <TextBubble
+            placeholder="B-"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("B-")}
+            selected={bloodType == "B-"}
+          />
+          <TextBubble
+            placeholder="B+"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("B+")}
+            selected={bloodType == "B+"}
+          />
+          <TextBubble
+            placeholder="O+"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("O+")}
+            selected={bloodType == "O+"}
+          />
+          <TextBubble
+            placeholder="O-"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("O-")}
+            selected={bloodType == "O-"}
+          />
+          <TextBubble
+            placeholder="AB+"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("AB+")}
+            selected={bloodType == "AB+"}
+          />
+          <TextBubble
+            placeholder="AB-"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("AB-")}
+            selected={bloodType == "AB-"}
+          />
         </Container>
         <View style={{ flex: 1 }} />
         <Container row>
@@ -85,86 +141,3 @@ const EnterDetailsScreen = ({ navigation }) => {
 };
 
 export default EnterDetailsScreen;
-
-export const styles = StyleSheet.create({
-  shadow: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 3,
-  },
-  buttonOutline: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-    borderRadius: 80,
-  },
-});
-
-const MaleLogo = ({ selected }) => {
-  if (selected) {
-    return (
-      <LinearGradient
-        colors={["#ff217a", "#ff4d4d"]}
-        style={[
-          {
-            borderRadius: 80,
-          },
-          styles.shadow,
-        ]}
-      >
-        <TouchableOpacity style={[styles.buttonOutline]}>
-          <WhiteMaleLogo height={40} width={40} />
-        </TouchableOpacity>
-      </LinearGradient>
-    );
-  } else {
-    return (
-      <TouchableOpacity
-        style={[
-          styles.buttonOutline,
-          styles.shadow,
-          { backgroundColor: Colors.white },
-        ]}
-      >
-        <DarkMaleLogo height={40} width={40} />
-      </TouchableOpacity>
-    );
-  }
-};
-
-const FemaleLogo = ({ selected }) => {
-  if (selected) {
-    return (
-      <LinearGradient
-        colors={["#ff217a", "#ff4d4d"]}
-        style={[
-          {
-            borderRadius: 80,
-          },
-          styles.shadow,
-        ]}
-      >
-        <TouchableOpacity style={[styles.buttonOutline]}>
-          <FemaleDarkLogo height={40} width={40} />
-        </TouchableOpacity>
-      </LinearGradient>
-    );
-  } else {
-    return (
-      <TouchableOpacity
-        style={[
-          styles.buttonOutline,
-          styles.shadow,
-          { backgroundColor: Colors.white },
-        ]}
-      >
-        <FemaleDarkLogo height={40} width={40} />
-      </TouchableOpacity>
-    );
-  }
-};
