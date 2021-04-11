@@ -5,9 +5,16 @@ import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../config/colors";
 import { StyleSheet } from "react-native";
 
-export const TextBubble = ({ placeholder, selected, padding, margin }) => {
+export const TextBubble = ({
+  placeholder,
+  selected,
+  padding,
+  margin,
+  onPress,
+}) => {
   return (
     <TouchableOpacity
+      onPress={onPress}
       style={{
         borderRadius: 80,
         padding: 2,

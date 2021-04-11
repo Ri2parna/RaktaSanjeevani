@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, CheckBox, Image, StyleSheet, View } from "react-native";
 import Screen from "../components/Screen";
 import Title from "../components/Title";
@@ -14,9 +14,15 @@ import { Container } from "../components/Container";
 import { TextBubble } from "../components/TextBubble";
 import { GradientButton } from "../components/GradientButton";
 
-const NewRequest = ({ navigation }) => {
+const NewRequest = ({ navigation, route }) => {
+  const [bloodType, setBloodType] = useState(null);
+  const [gender, setGender] = useState(null);
+  const [name, setName] = useState(null);
+  const [hospital, setHospital] = useState(null);
+  const [pincode, setPincode] = useState(null);
+
   return (
-    <Screen color={Colors.white}>
+    <Screen color={Colors.purewhite}>
       <View
         style={{
           height: "100%",
@@ -30,15 +36,18 @@ const NewRequest = ({ navigation }) => {
             width="90%"
             margin={8}
             padding={16}
+            onChangeText={(name) => setName(name)}
           />
           <CustomTextInput
             placeholder="Hospital Name"
             width="90%"
             margin={8}
             padding={16}
+            onChangeText={(hname) => setHospital(hname)}
           />
           <CustomTextInput
             placeholder="Pin Code"
+            onChangeText={(pincode) => setPincode(pincode)}
             width="90%"
             margin={8}
             padding={16}
@@ -48,21 +57,75 @@ const NewRequest = ({ navigation }) => {
           Select Blood Group
         </Title>
         <Container row>
-          <TextBubble placeholder="A+" padding={16} margin={4} />
-          <TextBubble placeholder="A-" padding={16} margin={4} />
-          <TextBubble placeholder="B-" padding={16} margin={4} />
-          <TextBubble placeholder="B+" padding={16} margin={4} selected />
-          <TextBubble placeholder="O+" padding={16} margin={4} />
-          <TextBubble placeholder="O-" padding={16} margin={4} />
-          <TextBubble placeholder="AB+" padding={16} margin={4} />
-          <TextBubble placeholder="AB-" padding={16} margin={4} />
+          <TextBubble
+            placeholder="A+"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("A+")}
+            selected={bloodType == "A+"}
+          />
+          <TextBubble
+            placeholder="A-"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("A-")}
+            selected={bloodType == "A-"}
+          />
+          <TextBubble
+            placeholder="B-"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("B-")}
+            selected={bloodType == "B-"}
+          />
+          <TextBubble
+            placeholder="B+"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("B+")}
+            selected={bloodType == "B+"}
+          />
+          <TextBubble
+            placeholder="O+"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("O+")}
+            selected={bloodType == "O+"}
+          />
+          <TextBubble
+            placeholder="O-"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("O-")}
+            selected={bloodType == "O-"}
+          />
+          <TextBubble
+            placeholder="AB+"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("AB+")}
+            selected={bloodType == "AB+"}
+          />
+          <TextBubble
+            placeholder="AB-"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("AB-")}
+            selected={bloodType == "AB-"}
+          />
         </Container>
         <Title size={24} padding={16}>
           Gender
         </Title>
         <Container row>
-          <MaleLogo selected />
-          <FemaleLogo />
+          <MaleLogo
+            selected={gender == "male"}
+            onPress={() => setGender("male")}
+          />
+          <FemaleLogo
+            selected={gender == "female"}
+            onPress={() => setGender("female")}
+          />
         </Container>
         <View style={{ flex: 1 }} />
         <Container row>
@@ -109,71 +172,46 @@ export const styles = StyleSheet.create({
   buttonOutline: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 24,
     borderRadius: 80,
   },
 });
 
-const MaleLogo = ({ selected }) => {
-  if (selected) {
-    return (
+const MaleLogo = ({ selected, onPress }) => {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.buttonOutline, styles.shadow]}
+    >
       <LinearGradient
-        colors={["#ff217a", "#ff4d4d"]}
-        style={[
-          {
-            borderRadius: 80,
-          },
-          styles.shadow,
-        ]}
+        colors={
+          selected ? ["#ff217a", "#ff4d4d"] : [Colors.white, Colors.white]
+        }
+        style={[styles.buttonOutline, styles.shadow, { padding: 24 }]}
       >
-        <TouchableOpacity style={[styles.buttonOutline]}>
+        {selected ? (
           <WhiteMaleLogo height={40} width={40} />
-        </TouchableOpacity>
+        ) : (
+          <DarkMaleLogo height={40} width={40} />
+        )}
       </LinearGradient>
-    );
-  } else {
-    return (
-      <TouchableOpacity
-        style={[
-          styles.buttonOutline,
-          styles.shadow,
-          { backgroundColor: Colors.white },
-        ]}
-      >
-        <DarkMaleLogo height={40} width={40} />
-      </TouchableOpacity>
-    );
-  }
+    </TouchableOpacity>
+  );
 };
 
-const FemaleLogo = ({ selected }) => {
-  if (selected) {
-    return (
+const FemaleLogo = ({ selected, onPress }) => {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.buttonOutline, styles.shadow, { margin: 8 }]}
+    >
       <LinearGradient
-        colors={["#ff217a", "#ff4d4d"]}
-        style={[
-          {
-            borderRadius: 80,
-          },
-          styles.shadow,
-        ]}
-      >
-        <TouchableOpacity style={[styles.buttonOutline]}>
-          <FemaleDarkLogo height={40} width={40} />
-        </TouchableOpacity>
-      </LinearGradient>
-    );
-  } else {
-    return (
-      <TouchableOpacity
-        style={[
-          styles.buttonOutline,
-          styles.shadow,
-          { backgroundColor: Colors.white },
-        ]}
+        colors={
+          selected ? ["#ff217a", "#ff4d4d"] : [Colors.white, Colors.white]
+        }
+        style={[styles.buttonOutline, styles.shadow, { padding: 24 }]}
       >
         <FemaleDarkLogo height={40} width={40} />
-      </TouchableOpacity>
-    );
-  }
+      </LinearGradient>
+    </TouchableOpacity>
+  );
 };

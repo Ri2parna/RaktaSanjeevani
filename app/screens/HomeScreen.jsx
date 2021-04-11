@@ -1,53 +1,14 @@
-// // This displays a map view with the requests in the nearby region
-
-// import * as React from "react";
-// import MapView, { Callout, Marker } from "react-native-maps";
-// import { StyleSheet, Text, View, Dimensions } from "react-native";
-
-// export default function HomeScreen() {
-//   return (
-//     <View style={styles.container}>
-//       <MapView
-//         initialRegion={{
-//           latitude: 37.78825,
-//           longitude: -122.4324,
-//           latitudeDelta: 0.0922,
-//           longitudeDelta: 0.0421,
-//         }}
-//         style={styles.map}
-//       >
-//         <Marker coordinate={{ latitude: 37.78825, longitude: -122.4324 }}>
-//           <Callout>
-//             <View>
-//               <Text>Title</Text>
-//               <Text>A long description about the target</Text>
-//             </View>
-//           </Callout>
-//         </Marker>
-//         <Marker coordinate={{ latitude: 37.79, longitude: -122.4354 }} />
-//         <Marker coordinate={{ latitude: 37.8, longitude: -122.4384 }} />
-//         <Marker coordinate={{ latitude: 37.81, longitude: -122.435 }} />
-//         <Marker coordinate={{ latitude: 37.82, longitude: -122.439 }} />
-//       </MapView>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   map: {
-//     width: Dimensions.get("window").width,
-//     height: Dimensions.get("window").height,
-//   },
-// });
-
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Button, Image, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Button,
+  Image,
+  Text,
+  ActivityIndicator,
+} from "react-native";
+import * as Location from "expo-location";
+import axios from "axios";
 import Colors from "../config/colors";
 import Title from "../components/Title";
 import SubTitle from "../components/SubTitle";
@@ -58,6 +19,9 @@ import { api } from "../config/endpoints";
 
 const HomeScreen = ({ navigation }) => {
   const [donorCount, setDonorCount] = useState(0);
+  const [cityName, setCityName] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [locationErrorMsg, setLocationErrorMsg] = useState(null);
   const [requestCount, setRequestCount] = useState(0);
 
   useEffect(() => {
@@ -76,6 +40,28 @@ const HomeScreen = ({ navigation }) => {
       e.preventDefault();
     })
   );
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      axios
+        .get(
+          // "http://api.positionstack.com/v1/reverse?access_key=943f706d873bce76d1de51755967d504&query=" +
+          // `${location.coords.latitude},${location.coords.longitude}`,
+          "http://api.positionstack.com/v1/reverse?access_key=943f706d873bce76d1de51755967d504&query=26.6998045,92.8358069"
+        )
+        .then(({ data }) => setCityName(data.data[0].county));
+      setLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+    })();
+  }, []);
   return (
     <View style={{ height: "100%", width: "100%" }}>
       <LinearGradient
@@ -112,8 +98,38 @@ const HomeScreen = ({ navigation }) => {
           />
         </View>
       </LinearGradient>
-
-      <View style={{ flex: 2, backgroundColor: "pink" }}></View>
+      <View style={{ flex: 2, backgroundColor: "pink" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            padding: 8,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Title>Current Location: </Title>
+          {cityName ? (
+            <>
+              <Text
+                style={{
+                  marginRight: 4,
+                  color: Colors["grey-6"],
+                  fontWeight: "bold",
+                }}
+              >
+                {cityName}
+              </Text>
+            </>
+          ) : (
+            <ActivityIndicator
+              size={32}
+              color={Colors["grey-8"]}
+              style={{ width: "12%" }}
+            />
+          )}
+          <CustomButton title="Update Location" textSize={14} />
+        </View>
+      </View>
     </View>
   );
 };

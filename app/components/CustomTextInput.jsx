@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
+import Colors from "../config/colors";
 
 const CustomTextInput = ({
   placeholder,
@@ -12,6 +13,7 @@ const CustomTextInput = ({
   keyboardType,
   textContentType,
   editable,
+  marginVertical,
   onChangeText,
 }) => {
   return (
@@ -23,7 +25,7 @@ const CustomTextInput = ({
       editable={editable}
       placeholder={placeholder}
       onChangeText={onChangeText}
-      placeholderTextColor="#a2a2a2"
+      placeholderTextColor={Colors["grey-4"]}
       style={[
         styles.shadow,
         {
@@ -34,6 +36,7 @@ const CustomTextInput = ({
           borderRadius: 816,
           width: width,
           margin: margin,
+          marginVertical: marginVertical,
         },
       ]}
     />
@@ -48,9 +51,8 @@ export const styles = StyleSheet.create({
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-
-    elevation: 2,
+    shadowOpacity: 0.4,
+    shadowRadius: 1.6,
+    elevation: 4,
   },
 });

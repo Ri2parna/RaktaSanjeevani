@@ -7,6 +7,7 @@ const Title = ({
   center,
   padding,
   paddingV = 0,
+  marginTop = 0,
   size,
   ...props
 }) => {
@@ -20,6 +21,7 @@ const Title = ({
         textAlign: center && "center",
         padding: padding,
         flexWrap: "wrap",
+        marginTop: marginTop,
       }}
     >
       {children}
