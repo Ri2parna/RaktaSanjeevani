@@ -16,15 +16,20 @@ import { LinearGradient } from "expo-linear-gradient";
 import { CustomButton } from "../components/CustomButton";
 
 import { api } from "../config/endpoints";
+import { getData } from "../utils/asyncStorage";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
   const [donorCount, setDonorCount] = useState(0);
   const [cityName, setCityName] = useState(null);
   const [location, setLocation] = useState(null);
   const [locationErrorMsg, setLocationErrorMsg] = useState(null);
   const [requestCount, setRequestCount] = useState(0);
+  const [uid, setUid] = useState(null);
 
   useEffect(() => {
+    getData("uid").then((result) => {
+      console.log(result);
+    });
     api
       .get("/blood/donor/count")
       .then(({ data }) => setDonorCount(data[0]["count"]))

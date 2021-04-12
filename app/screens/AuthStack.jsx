@@ -5,7 +5,6 @@ import StartScreen from "./StartScreen";
 import VerifyOTPScreen from "./AuthScreens/VerifyOTPScreen";
 import RegisterScreen from "./AuthScreens/RegisterScreen";
 import AppStack from "./AppStack";
-import EnterDetailsScreen from "./EnterDetailsScreen";
 
 const Auth = createStackNavigator();
 
@@ -14,14 +13,13 @@ const AuthStack = () => {
     <Auth.Navigator screenOptions={{ headerShown: false }}>
       <Auth.Screen name="Start" component={StartScreen} />
       <Auth.Screen name="Login" component={LoginScreen} />
-      <Auth.Screen name="Register" component={RegisterScreen} />
-      <Auth.Screen name="OTPScreen" component={VerifyOTPScreen} />
-      <Auth.Screen name="AppStack" component={AppStack} />
       <Auth.Screen
-        name="Details"
-        component={EnterDetailsScreen}
+        name="Register"
+        component={RegisterScreen}
         options={{ headerShown: true }}
       />
+      <Auth.Screen name="OTPScreen" component={VerifyOTPScreen} />
+      <Auth.Screen name="AppStack" component={AppStack} />
     </Auth.Navigator>
   );
 };

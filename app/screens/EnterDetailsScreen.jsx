@@ -1,3 +1,4 @@
+// can remove this file
 import React, { useState } from "react";
 import { CheckBox, View } from "react-native";
 import Screen from "../components/Screen";

@@ -16,8 +16,13 @@ import Colors from "../../config/colors";
 import CustomTextInput from "../../components/CustomTextInput";
 import { GradientButton } from "../../components/GradientButton";
 
+import { api } from "../../config/endpoints";
+import { storeData } from "../../utils/asyncStorage";
+
 import * as FirebaseRecaptcha from "expo-firebase-recaptcha";
 import * as firebase from "firebase";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyAzDU49zIIqxsTa3nZSrqdG3rW55Qa0lqM",
@@ -48,6 +53,8 @@ const VerifyOTPScreen = ({ navigation }) => {
   const [confirmError, setConfirmError] = React.useState();
   const [confirmInProgress, setConfirmInProgress] = React.useState(false);
   const isConfigValid = !!FIREBASE_CONFIG.apiKey;
+
+  const [uid, setUid] = useState(null);
   return (
     <Screen color={Colors.purewhite}>
       <View
@@ -147,12 +154,17 @@ const VerifyOTPScreen = ({ navigation }) => {
               setVerificationId("");
               setVerificationCode("");
               verificationCodeTextInput.current?.clear();
-              const isNewUser = authResult.additionalUserInfo.isNewUser;
-              if (isNewUser) {
-                navigation.navigate("Details", { uid: authResult.user.uid });
+
+              const { data } = await api.post("/login", { phone: phoneNumber });
+
+              // new user
+              if (Array.isArray(data)) {
+                navigation.navigate("Register", { uid: data[0] });
+                storeData("uid", data[0]);
               } else {
-                Alert.alert("Login Successful");
-                navigation.navigate("AppStack", { uid: authResult.user.uid });
+                // old user
+                storeData("uid", data.uid);
+                navigation.navigate("AppStack");
               }
             } catch (err) {
               setConfirmError(err);
