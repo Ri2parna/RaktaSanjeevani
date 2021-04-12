@@ -35,7 +35,12 @@ const AppStack = () => {
           headerTitle: "Request for blood",
         }}
       />
-      <Stack.Screen name="NewRequest" component={NewRequest} />
+      <Stack.Screen name="NewRequest" component={NewRequest} options={{
+          headerStyle: { backgroundColor: "#ff4d4d", elevation: 0 },
+          headerTintColor: Colors.white,
+          headerTitle: "New Blood request",
+          
+        }}/>
       <Stack.Screen name="ViewRequests" component={ViewRequestsScreen} />
       <Stack.Screen
         name="RequestDetails"

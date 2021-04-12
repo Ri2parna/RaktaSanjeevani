@@ -9,6 +9,7 @@ import { TextBubble } from "../components/TextBubble";
 import { GradientButton } from "../components/GradientButton";
 import { MaleLogo } from "../components/MaleLogo";
 import { FemaleLogo } from "../components/FemaleLogo";
+import { ScrollView } from "react-native-gesture-handler";
 
 const EnterDetailsScreen = ({ navigation }) => {
   const [name, setName] = useState(null);
@@ -17,7 +18,7 @@ const EnterDetailsScreen = ({ navigation }) => {
   const [bloodType, setBloodType] = useState(null);
   return (
     <Screen color={Colors.white}>
-      <View
+      <ScrollView
         style={{
           height: "100%",
           width: "100%",
@@ -33,7 +34,7 @@ const EnterDetailsScreen = ({ navigation }) => {
             onChangeText={(name) => setName(name)}
           />
           <CustomTextInput
-            placeholder="Email"
+            placeholder="DOB"
             width="90%"
             margin={8}
             padding={16}
@@ -135,7 +136,7 @@ const EnterDetailsScreen = ({ navigation }) => {
           paddingV={16}
           onPress={() => navigation.navigate("AppStack")}
         />
-      </View>
+      </ScrollView>
     </Screen>
   );
 };

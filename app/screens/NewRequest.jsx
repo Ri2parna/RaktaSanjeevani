@@ -10,6 +10,7 @@ import { TextBubble } from "../components/TextBubble";
 import { GradientButton } from "../components/GradientButton";
 import { MaleLogo } from "../components/MaleLogo";
 import { FemaleLogo } from "../components/FemaleLogo";
+import { ScrollView } from "react-native-gesture-handler";
 
 const NewRequest = ({ navigation, route }) => {
   const [bloodType, setBloodType] = useState(null);
@@ -20,7 +21,7 @@ const NewRequest = ({ navigation, route }) => {
 
   return (
     <Screen color={Colors.purewhite}>
-      <View
+      <ScrollView
         style={{
           height: "100%",
           width: "100%",
@@ -148,7 +149,7 @@ const NewRequest = ({ navigation, route }) => {
             navigation.navigate("Home");
           }}
         />
-      </View>
+      </ScrollView>
     </Screen>
   );
 };
