@@ -8,6 +8,8 @@ import {
   Alert,
   ActivityIndicator,
   StatusBar,
+  ImageBackground,
+  Dimensions,
 } from "react-native";
 import Screen from "../../components/Screen";
 import Title from "../../components/Title";
@@ -15,7 +17,7 @@ import SubTitle from "../../components/SubTitle";
 import Colors from "../../config/colors";
 import CustomTextInput from "../../components/CustomTextInput";
 import { GradientButton } from "../../components/GradientButton";
-
+import { Container } from "../../components/Container";
 import { api } from "../../config/endpoints";
 import { storeData } from "../../utils/asyncStorage";
 
@@ -54,6 +56,7 @@ const VerifyOTPScreen = ({ navigation }) => {
   const [confirmInProgress, setConfirmInProgress] = React.useState(false);
   const isConfigValid = !!FIREBASE_CONFIG.apiKey;
 
+  const [countryCode, setCountryCode] = useState("+91");
   const [uid, setUid] = useState(null);
   return (
     <Screen color={Colors.purewhite}>
@@ -76,17 +79,29 @@ const VerifyOTPScreen = ({ navigation }) => {
           Enter your phone number so that we can sign you up
         </SubTitle>
         <Text style={styles.customText}>Phone Number:</Text>
-        <CustomTextInput
-          width={"100%"}
-          marginVertical={8}
-          placeholder={"+91 999 999 9999"}
-          autoFocus={isConfigValid}
-          autoCompleteType="tel"
-          keyboardType="phone-pad"
-          textContentType="telephoneNumber"
-          editable={!verificationId}
-          onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
-        />
+        <Container row>
+          <CustomTextInput
+            marginVertical={8}
+            placeholder={"+91"}
+            autoFocus={isConfigValid}
+            autoCompleteType="tel"
+            keyboardType="phone-pad"
+            textContentType="telephoneNumber"
+            editable={false}
+            onChangeText={(countryCode) => setCountryCode(countryCode)}
+          />
+          <CustomTextInput
+            style={{ flex: 1 }}
+            marginVertical={8}
+            placeholder={"99XX XXX XXX"}
+            autoFocus={isConfigValid}
+            autoCompleteType="tel"
+            keyboardType="phone-pad"
+            textContentType="telephoneNumber"
+            editable={!verificationId}
+            onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
+          />
+        </Container>
 
         <GradientButton
           title={`${verificationId ? "Resend" : "Send"} Verification Code`}
@@ -100,7 +115,7 @@ const VerifyOTPScreen = ({ navigation }) => {
               setVerifyInProgress(true);
               setVerificationId("");
               const verificationId = await phoneProvider.verifyPhoneNumber(
-                phoneNumber,
+                countryCode + phoneNumber,
                 // @ts-ignore
                 recaptchaVerifier.current
               );
@@ -126,9 +141,13 @@ const VerifyOTPScreen = ({ navigation }) => {
         <Text style={styles.customText}>Verification Code: </Text>
         <TextInput
           ref={verificationCodeTextInput}
-          style={styles.textInput}
+          style={
+            !!verificationId
+              ? [styles.textInput, styles.editable]
+              : styles.textInput
+          }
           editable={!!verificationId}
-          placeholder="123456"
+          placeholder="12XXXX"
           onChangeText={(verificationCode) =>
             setVerificationCode(verificationCode)
           }
@@ -185,6 +204,10 @@ const VerifyOTPScreen = ({ navigation }) => {
             </Text>
           </View>
         )}
+        <ImageBackground
+          source={require("../../assets/mailboxIcon.png")}
+          style={{ height: 400, width: Dimensions.get("screen").width }}
+        />
       </View>
     </Screen>
   );
@@ -197,6 +220,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Colors.secondary,
     marginTop: 12,
+    fontSize: 18,
+  },
+  editable: {
+    borderColor: "gray",
+    elevation: 3,
+    backgroundColor: "aliceblue",
+    borderWidth: 1,
   },
   container: {
     flex: 1,
@@ -220,10 +250,12 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   textInput: {
-    borderWidth: 2,
+    borderWidth: 0.2,
+    borderRadius: 40,
     padding: 4,
+    paddingHorizontal: 16,
     marginBottom: 8,
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "bold",
   },
   error: {

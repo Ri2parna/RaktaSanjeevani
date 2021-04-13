@@ -4,6 +4,7 @@ import { TextInput } from "react-native-gesture-handler";
 import Colors from "../config/colors";
 
 const CustomTextInput = ({
+  style,
   placeholder,
   padding,
   width,
@@ -38,6 +39,7 @@ const CustomTextInput = ({
           margin: margin,
           marginVertical: marginVertical,
         },
+        style,
       ]}
     />
   );

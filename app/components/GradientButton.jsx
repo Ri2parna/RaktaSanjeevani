@@ -33,7 +33,7 @@ export const GradientButton = ({
           paddingHorizontal: paddingH,
         }}
       >
-        <Title size={20} color={Colors.white}>
+        <Title size={16} color={Colors.white}>
           {title}
         </Title>
       </LinearGradient>
