@@ -7,9 +7,8 @@ import LoginScreen from "./app/screens/AuthScreens/LoginScreen";
 export default function App() {
   const [LoggedIn, setLoggedIn] = useState(false);
   return (
-    // <NavigationContainer>
-    //   {LoggedIn ? <AppStack /> : <AuthStack />}
-    // </NavigationContainer>
-    <LoginScreen />
+    <NavigationContainer>
+      {LoggedIn ? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
   );
 }

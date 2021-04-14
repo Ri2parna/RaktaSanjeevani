@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     height: Dimensions.get("screen").height, // 48 is added to padd the bottom soft navigation
     width: Dimensions.get("window").width,
-    height: "100%",
+    // height: "100%",
     // paddingTop: Platform.OS == "android" ? StatusBar.currentHeight : 0,
   },
 });

@@ -18,27 +18,52 @@ import { CustomButton } from "../components/CustomButton";
 import { api } from "../config/endpoints";
 import { getData } from "../utils/asyncStorage";
 
+// Here location object refers to the co-ordinates
+// cityName refers to the location
+
 const HomeScreen = ({ navigation, route }) => {
+  // some variable could be changed to useRef here
   const [donorCount, setDonorCount] = useState(0);
   const [cityName, setCityName] = useState(null);
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState({
+    latitude: 26.6998045, // default location is set to Patkai
+    longitude: 92.8358069,
+  });
   const [locationErrorMsg, setLocationErrorMsg] = useState(null);
   const [requestCount, setRequestCount] = useState(0);
   const [uid, setUid] = useState(null);
 
-  useEffect(() => {
-    getData("uid").then((result) => {
-      console.log(result);
+  const convertToDistrict = async () => {
+    // Geocoding URL Links
+    // "http://api.positionstack.com/v1/reverse?access_key=943f706d873bce76d1de51755967d504&query=" +
+    // `${location.coords.latitude},${location.coords.longitude}`,
+
+    // "http://api.positionstack.com/v1/reverse?access_key=943f706d873bce76d1de51755967d504&query=26.6998045,92.8358069"
+    axios
+      .get("http://api.positionstack.com/v1/reverse", {
+        params: {
+          access_key: "943f706d873bce76d1de51755967d504",
+          query: `${location.latitude},${location.longitude}`,
+        },
+      })
+      .then(({ data }) => setCityName(data.data[0].county));
+  };
+  const storeCurrentLocation = async () => {
+    setCityName(null);
+    let { status } = await Location.requestPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+
+    let currentLocation = await Location.getCurrentPositionAsync({});
+
+    setLocation({
+      latitude: currentLocation.coords.latitude,
+      longitude: currentLocation.coords.longitude,
     });
-    api
-      .get("/blood/donor/count")
-      .then(({ data }) => setDonorCount(data[0]["count"]))
-      .catch(() => console.warn("Error while quering network data"));
-    api
-      .get("/blood/request/count")
-      .then(({ data }) => setRequestCount(data[0]["count"]))
-      .catch(() => console.warn("Error while quering network data"));
-  }, []);
+  };
+
   // prevents moving back to the login screen after succesful login
   useEffect(() =>
     navigation.addListener("beforeRemove", (e) => {
@@ -46,26 +71,8 @@ const HomeScreen = ({ navigation, route }) => {
     })
   );
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      axios
-        .get(
-          // "http://api.positionstack.com/v1/reverse?access_key=943f706d873bce76d1de51755967d504&query=" +
-          // `${location.coords.latitude},${location.coords.longitude}`,
-          "http://api.positionstack.com/v1/reverse?access_key=943f706d873bce76d1de51755967d504&query=26.6998045,92.8358069"
-        )
-        .then(({ data }) => setCityName(data.data[0].county));
-      setLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
-    })();
+    getData("uid");
+    storeCurrentLocation().then(() => convertToDistrict());
   }, []);
   return (
     <View style={{ height: "100%", width: "100%" }}>
@@ -117,7 +124,7 @@ const HomeScreen = ({ navigation, route }) => {
             <>
               <Text
                 style={{
-                  marginRight: 4,
+                  marginRight: 8,
                   color: Colors["grey-6"],
                   fontWeight: "bold",
                 }}
@@ -132,7 +139,13 @@ const HomeScreen = ({ navigation, route }) => {
               style={{ width: "12%" }}
             />
           )}
-          <CustomButton title="Update Location" textSize={14} />
+          <CustomButton
+            title="Update Location"
+            textSize={14}
+            onPress={() => {
+              storeCurrentLocation().then(() => convertToDistrict());
+            }}
+          />
         </View>
       </View>
     </View>

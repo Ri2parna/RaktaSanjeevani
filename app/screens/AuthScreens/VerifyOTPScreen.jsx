@@ -159,23 +159,35 @@ const VerifyOTPScreen = ({ navigation }) => {
           paddingH={24}
           onPress={async () => {
             try {
-              setConfirmError(undefined);
-              setConfirmInProgress(true);
-              const credential = firebase.auth.PhoneAuthProvider.credential(
-                verificationId,
-                verificationCode
-              );
-              const authResult = await firebase
-                .auth()
-                .signInWithCredential(credential);
-              setConfirmInProgress(false);
-              setVerificationId("");
-              setVerificationCode("");
-              verificationCodeTextInput.current?.clear();
+              // setConfirmError(undefined);
+              // setConfirmInProgress(true);
+              // const credential = firebase.auth.PhoneAuthProvider.credential(
+              //   verificationId,
+              //   verificationCode
+              // );
+              // const authResult = await firebase
+              //   .auth()
+              //   .signInWithCredential(credential);
+              // setConfirmInProgress(false);
+              // setVerificationId("");
+              // setVerificationCode("");
+              // verificationCodeTextInput.current?.clear();
 
-              const previouslyRegisteredUser = await api.get("/registration", {
-                phone: phoneNumber,
-              });
+              // api
+              //   .get("/registration", {
+              //     phone: phoneNumber,
+              //   })
+              //   .then((response) => {
+              //     if (response.problem) {
+              //       navigation.navigate("Register", { phoneNumber });
+              //     } else {
+              //       navigation.navigate("AppStack");
+              //     }
+              //   });
+
+              storeData("uid", "6076f6f580f3a7002199bd3d").then(() =>
+                navigation.navigate("AppStack")
+              );
             } catch (err) {
               setConfirmError(err);
               setConfirmInProgress(false);

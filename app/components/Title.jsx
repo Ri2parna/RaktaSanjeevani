@@ -2,6 +2,7 @@ import React, { Children } from "react";
 import { View, Text } from "react-native";
 
 const Title = ({
+  margin,
   children,
   color,
   center,
@@ -21,6 +22,7 @@ const Title = ({
         textAlign: center && "center",
         padding: padding,
         flexWrap: "wrap",
+        margin: margin,
         marginTop: marginTop,
       }}
     >

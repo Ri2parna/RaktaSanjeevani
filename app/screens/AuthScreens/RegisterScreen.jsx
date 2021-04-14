@@ -11,12 +11,34 @@ import { MaleLogo } from "../../components/MaleLogo";
 import { FemaleLogo } from "../../components/FemaleLogo";
 import { ScrollView } from "react-native-gesture-handler";
 
+import { api } from "../../config/endpoints";
+import { storeData } from "../../utils/asyncStorage";
+
 const RegisterScreen = ({ navigation, route }) => {
-  const uid = route.params.uid;
+  const { phoneNumber } = route.params;
   const [name, setName] = useState(null);
-  const [email, setEmail] = useState(null);
+  const [age, setAge] = useState(null);
+  const [pincode, setPincode] = useState(null);
   const [gender, setGender] = useState(null);
   const [bloodType, setBloodType] = useState(null);
+
+  const handleSubmit = () => {
+    api
+      .post("/registration", {
+        name,
+        age,
+        phone: phoneNumber + 3,
+        bloodType,
+        pincode,
+      })
+      .then((response) => {
+        if (response.ok) {
+          navigation.navigate("AppStack");
+          // store the data into local storage
+          storeData("uid", response.data._id);
+        }
+      });
+  };
   return (
     <Screen color={Colors.white}>
       <ScrollView
@@ -35,11 +57,18 @@ const RegisterScreen = ({ navigation, route }) => {
             onChangeText={(name) => setName(name)}
           />
           <CustomTextInput
-            placeholder="DOB"
+            placeholder="Age"
             width="90%"
             margin={8}
             padding={16}
-            onChangeText={(email) => setEmail(email)}
+            onChangeText={(age) => setAge(age)}
+          />
+          <CustomTextInput
+            placeholder="Pincode"
+            width="90%"
+            margin={8}
+            padding={16}
+            onChangeText={(pincode) => setPincode(pincode)}
           />
         </Container>
         <Title size={24} padding={16}>
@@ -135,7 +164,7 @@ const RegisterScreen = ({ navigation, route }) => {
           title="SUBMIT"
           margin={8}
           paddingV={16}
-          onPress={() => navigation.navigate("AppStack")}
+          onPress={() => handleSubmit()}
         />
       </ScrollView>
     </Screen>
