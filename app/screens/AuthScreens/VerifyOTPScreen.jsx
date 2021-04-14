@@ -1,6 +1,7 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
+  Image,
   View,
   StyleSheet,
   TextInput,
@@ -23,8 +24,6 @@ import { storeData } from "../../utils/asyncStorage";
 
 import * as FirebaseRecaptcha from "expo-firebase-recaptcha";
 import * as firebase from "firebase";
-import { useEffect } from "react";
-import { useState } from "react";
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyAzDU49zIIqxsTa3nZSrqdG3rW55Qa0lqM",
@@ -174,17 +173,9 @@ const VerifyOTPScreen = ({ navigation }) => {
               setVerificationCode("");
               verificationCodeTextInput.current?.clear();
 
-              const { data } = await api.post("/login", { phone: phoneNumber });
-
-              // new user
-              if (Array.isArray(data)) {
-                navigation.navigate("Register", { uid: data[0] });
-                storeData("uid", data[0]);
-              } else {
-                // old user
-                storeData("uid", data.uid);
-                navigation.navigate("AppStack");
-              }
+              const previouslyRegisteredUser = await api.get("/registration", {
+                phone: phoneNumber,
+              });
             } catch (err) {
               setConfirmError(err);
               setConfirmInProgress(false);
@@ -204,9 +195,13 @@ const VerifyOTPScreen = ({ navigation }) => {
             </Text>
           </View>
         )}
-        <ImageBackground
+        <Image
           source={require("../../assets/mailboxIcon.png")}
-          style={{ height: 400, width: Dimensions.get("screen").width }}
+          style={{
+            height: 400,
+            width: Dimensions.get("screen").width,
+            alignSelf: "center",
+          }}
         />
       </View>
     </Screen>

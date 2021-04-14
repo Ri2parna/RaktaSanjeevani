@@ -11,7 +11,7 @@
 import { create } from "apisauce";
 
 const api = create({
-  baseURL: "https://pure-coast-81586.herokuapp.com/api",
+  baseURL: "http://9e012dd47f4a.ngrok.io",
 });
 
 module.exports = { api };
