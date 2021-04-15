@@ -4,6 +4,9 @@ import Screen from "../components/Screen";
 import Title from "../components/Title";
 import Colors from "../config/colors";
 import CustomTextInput from "../components/CustomTextInput";
+
+import { api } from "../config/endpoints";
+
 import TransDarkLogo from "../assets/transUserDark.svg";
 import { Container } from "../components/Container";
 import { TextBubble } from "../components/TextBubble";
@@ -18,6 +21,18 @@ const NewRequest = ({ navigation, route }) => {
   const [name, setName] = useState(null);
   const [hospital, setHospital] = useState(null);
   const [pincode, setPincode] = useState(null);
+
+  const submitBloodRequest = () => {
+    api.post("/request", {
+      bloodType,
+      units: "",
+      patientName: name,
+      from: "uid",
+      validity: "",
+      location: "",
+      hospital: "",
+    });
+  };
 
   return (
     <Screen color={Colors.purewhite}>

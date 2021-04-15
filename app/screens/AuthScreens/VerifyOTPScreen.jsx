@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Text,
   Image,
@@ -6,10 +6,8 @@ import {
   StyleSheet,
   TextInput,
   Platform,
-  Alert,
   ActivityIndicator,
   StatusBar,
-  ImageBackground,
   Dimensions,
 } from "react-native";
 import Screen from "../../components/Screen";
@@ -21,19 +19,11 @@ import { GradientButton } from "../../components/GradientButton";
 import { Container } from "../../components/Container";
 import { api } from "../../config/endpoints";
 import { storeData } from "../../utils/asyncStorage";
+import UserContext from "../../hooks/userContext";
 
 import * as FirebaseRecaptcha from "expo-firebase-recaptcha";
 import * as firebase from "firebase";
-
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyAzDU49zIIqxsTa3nZSrqdG3rW55Qa0lqM",
-  authDomain: "raktasanjeevani-d6968.firebaseapp.com",
-  projectId: "raktasanjeevani-d6968",
-  storageBucket: "raktasanjeevani-d6968.appspot.com",
-  messagingSenderId: "388322814025",
-  appId: "1:388322814025:web:de00e70e42207cc8ac7798",
-  measurementId: "G-NY2K6YV7KG",
-};
+import { FIREBASE_CONFIG } from "../../config/firebase";
 
 try {
   if (FIREBASE_CONFIG.apiKey) {
@@ -56,7 +46,7 @@ const VerifyOTPScreen = ({ navigation }) => {
   const isConfigValid = !!FIREBASE_CONFIG.apiKey;
 
   const [countryCode, setCountryCode] = useState("+91");
-  const [uid, setUid] = useState(null);
+  const { uid, setUid } = useContext(UserContext);
   return (
     <Screen color={Colors.purewhite}>
       <View
@@ -184,7 +174,7 @@ const VerifyOTPScreen = ({ navigation }) => {
               //       navigation.navigate("AppStack");
               //     }
               //   });
-
+              setUid("6076f6f580f3a7002199bd3d");
               storeData("uid", "6076f6f580f3a7002199bd3d").then(() =>
                 navigation.navigate("AppStack")
               );

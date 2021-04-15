@@ -1,21 +1,14 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Button,
-  Image,
-  Text,
-  ActivityIndicator,
-} from "react-native";
-import * as Location from "expo-location";
 import axios from "axios";
-import Colors from "../config/colors";
-import Title from "../components/Title";
-import SubTitle from "../components/SubTitle";
 import { LinearGradient } from "expo-linear-gradient";
+import * as Location from "expo-location";
+import React, { useContext, useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { CustomButton } from "../components/CustomButton";
-
+import SubTitle from "../components/SubTitle";
+import Title from "../components/Title";
+import Colors from "../config/colors";
 import { api } from "../config/endpoints";
+import UserContext from "../hooks/userContext";
 import { getData } from "../utils/asyncStorage";
 
 // Here location object refers to the co-ordinates
@@ -23,15 +16,12 @@ import { getData } from "../utils/asyncStorage";
 
 const HomeScreen = ({ navigation, route }) => {
   // some variable could be changed to useRef here
-  const [donorCount, setDonorCount] = useState(0);
-  const [cityName, setCityName] = useState(null);
-  const [location, setLocation] = useState({
-    latitude: 26.6998045, // default location is set to Patkai
-    longitude: 92.8358069,
-  });
+  const [donorCount, setDonorCount] = useState(null);
   const [locationErrorMsg, setLocationErrorMsg] = useState(null);
-  const [requestCount, setRequestCount] = useState(0);
-  const [uid, setUid] = useState(null);
+  const [requestCount, setRequestCount] = useState(null);
+  const { uid, location, cityName, setCityName, setLocation } = useContext(
+    UserContext
+  );
 
   const convertToDistrict = async () => {
     // Geocoding URL Links
@@ -46,7 +36,10 @@ const HomeScreen = ({ navigation, route }) => {
           query: `${location.latitude},${location.longitude}`,
         },
       })
-      .then(({ data }) => setCityName(data.data[0].county));
+      .then(({ data }) => {
+        let city = `${data.data[0].county}`.toLowerCase();
+        setCityName(city);
+      });
   };
   const storeCurrentLocation = async () => {
     setCityName(null);
@@ -62,6 +55,12 @@ const HomeScreen = ({ navigation, route }) => {
       latitude: currentLocation.coords.latitude,
       longitude: currentLocation.coords.longitude,
     });
+    // update location on server
+    api.post("/user", { uid, currentLocation: cityName }).then((response) => {
+      if (response.problem) {
+        console.warn("Houston, we have a problem with updating location");
+      }
+    });
   };
 
   // prevents moving back to the login screen after succesful login
@@ -73,7 +72,10 @@ const HomeScreen = ({ navigation, route }) => {
   useEffect(() => {
     getData("uid");
     storeCurrentLocation().then(() => convertToDistrict());
+    api.get("/donorcount").then(({ data }) => setDonorCount(data.count));
+    api.get("/requestcount").then(({ data }) => setRequestCount(data.count));
   }, []);
+
   return (
     <View style={{ height: "100%", width: "100%" }}>
       <LinearGradient
@@ -88,7 +90,11 @@ const HomeScreen = ({ navigation, route }) => {
         <View style={styles.cta}>
           <View style={{ alignItems: "center" }}>
             <Title color={Colors.white} size={24}>
-              {donorCount}
+              {donorCount == null ? (
+                <ActivityIndicator size={32} color={Colors["grey-8"]} />
+              ) : (
+                donorCount
+              )}
             </Title>
             <SubTitle color={Colors.white}>Donors</SubTitle>
           </View>
@@ -100,7 +106,11 @@ const HomeScreen = ({ navigation, route }) => {
         <View style={styles.cta}>
           <View style={{ alignItems: "center" }}>
             <Title color={Colors.white} size={24}>
-              {requestCount}
+              {requestCount == null ? (
+                <ActivityIndicator size={32} color={Colors["grey-8"]} />
+              ) : (
+                requestCount
+              )}
             </Title>
             <SubTitle color={Colors.white}>Requests</SubTitle>
           </View>

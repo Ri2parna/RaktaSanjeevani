@@ -13,6 +13,8 @@ import { ScrollView } from "react-native-gesture-handler";
 
 import { api } from "../../config/endpoints";
 import { storeData } from "../../utils/asyncStorage";
+import UserContext from "../../hooks/userContext";
+import { useContext } from "react";
 
 const RegisterScreen = ({ navigation, route }) => {
   const { phoneNumber } = route.params;
@@ -21,6 +23,7 @@ const RegisterScreen = ({ navigation, route }) => {
   const [pincode, setPincode] = useState(null);
   const [gender, setGender] = useState(null);
   const [bloodType, setBloodType] = useState(null);
+  const { setUid } = useContext(UserContext);
 
   const handleSubmit = () => {
     api
@@ -33,6 +36,7 @@ const RegisterScreen = ({ navigation, route }) => {
       })
       .then((response) => {
         if (response.ok) {
+          setUid(response.data._id);
           navigation.navigate("AppStack");
           // store the data into local storage
           storeData("uid", response.data._id);

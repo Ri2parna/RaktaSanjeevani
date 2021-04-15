@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Button, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import {
+  View,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import Title from "../components/Title";
 import SubTitle from "../components/SubTitle";
@@ -7,42 +13,60 @@ import Screen from "../components/Screen";
 import Colors from "../config/colors";
 import { api } from "../config/endpoints";
 import { TextBubble } from "../components/TextBubble";
-const ViewRequestsScreen = ({ navigation, city = "Guwahati" }) => {
+import UserContext from "../hooks/userContext";
+import moment from "moment";
+
+const ViewRequestsScreen = ({ navigation }) => {
+  const { cityName } = useContext(UserContext);
   const [requestList, setRequestList] = useState([]);
+
   useEffect(() => {
-    api
-      .get("users/data/list/request/" + city)
-      .then(({ data }) => setRequestList(data));
+    api.get("/request/" + cityName).then((response) => {
+      if (response.ok) {
+        setRequestList(response.data);
+      }
+    });
   }, []);
   return (
-    <Screen color={Colors.purewhite}>
-      <FlatList
-        contentContainerStyle={[
-          {
-            padding: 8,
-            borderRadius: 4,
-            backgroundColor: Colors.purewhite,
+    <FlatList
+      contentContainerStyle={[
+        {
+          padding: 8,
+          borderRadius: 4,
+          backgroundColor: Colors.purewhite,
+          width: "100%",
+          // this makes the screen unscrollable when the list exceeds screen size
+          minHeight: "100%",
+          alignItems: "center",
+        },
+        styles.shadow,
+      ]}
+      data={requestList}
+      ListEmptyComponent={
+        <View
+          style={{
             width: "100%",
             height: "100%",
             alignItems: "center",
-          },
-          styles.shadow,
-        ]}
-        data={requestList}
-        ListEmptyComponent={<Title>No Requests so far.</Title>}
-        renderItem={({ item }) => (
-          <RequestCard
-            name={item.pname}
-            hospital={item.hname}
-            units={item.unit}
-            date={item.date}
-            city={item.city}
-            onPress={() => navigation.navigate("RequestDetails", item)}
-          />
-        )}
-        keyExtractor={(item, index) => item.slno + index}
-      />
-    </Screen>
+            justifyContent: "center",
+          }}
+        >
+          <ActivityIndicator color={Colors.blood} size={60} />
+        </View>
+      }
+      renderItem={({ item }) => (
+        <RequestCard
+          name={item.patientName}
+          hospital={item.hospital}
+          units={item.units}
+          date={item.createdAt}
+          city={item.location}
+          bloodType={item.bloodType}
+          onPress={() => navigation.navigate("RequestDetails", item)}
+        />
+      )}
+      keyExtractor={(item, index) => item._id}
+    />
   );
 };
 const styles = StyleSheet.create({
@@ -55,9 +79,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   image: {
-    height: 100,
-    width: 100,
-    borderRadius: 100,
+    height: 80,
+    width: 80,
+    borderRadius: 80,
     borderWidth: 1,
   },
   shadow: {
@@ -91,13 +115,13 @@ const RequestCard = ({
       onPress={onPress}
     >
       <View style={styles.image} />
-      <View style={{ margin: 4, padding: 4 }}>
-        <Title size={20}>{name || "Alexandra Daddario"}</Title>
-        <SubTitle size={18}>{hospital}</SubTitle>
-        <SubTitle size={18}>{`${units} units`}</SubTitle>
-        <SubTitle size={18}>{date}</SubTitle>
+      <View style={{ margin: 4, padding: 4, flexShrink: 1 }}>
+        <Title size={18}>{name || "Alexandra Daddario"}</Title>
+        <SubTitle size={16}>{hospital}</SubTitle>
+        <SubTitle size={16}>{`${units} units`}</SubTitle>
+        <SubTitle size={16}>{moment(date).calendar()}</SubTitle>
       </View>
-      <TextBubble placeholder={bloodType || "N/A"} padding={12} selected />
+      <TextBubble placeholder={bloodType} padding={12} selected />
     </TouchableOpacity>
   );
 };
