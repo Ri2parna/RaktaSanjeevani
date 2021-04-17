@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "./AuthScreens/LoginScreen";
 import StartScreen from "./StartScreen";
 import VerifyOTPScreen from "./AuthScreens/VerifyOTPScreen";
 import RegisterScreen from "./AuthScreens/RegisterScreen";
@@ -10,15 +9,17 @@ const Auth = createStackNavigator();
 
 const AuthStack = () => {
   return (
-    <Auth.Navigator screenOptions={{ headerShown: false }}>
+    <Auth.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={"Start"}
+    >
       <Auth.Screen name="Start" component={StartScreen} />
-      <Auth.Screen name="Login" component={LoginScreen} />
+      <Auth.Screen name="Login" component={VerifyOTPScreen} />
       <Auth.Screen
         name="Register"
         component={RegisterScreen}
         options={{ headerShown: true }}
       />
-      <Auth.Screen name="OTPScreen" component={VerifyOTPScreen} />
       <Auth.Screen name="AppStack" component={AppStack} />
     </Auth.Navigator>
   );

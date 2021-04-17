@@ -6,7 +6,7 @@ import AppStack from "./app/screens/AppStack";
 import AuthStack from "./app/screens/AuthStack";
 
 import UserContext from "./app/hooks/userContext";
-import { getData } from "./app/utils/asyncStorage";
+import { getData, removeData } from "./app/utils/asyncStorage";
 
 export default function App() {
   const [uid, setUid] = useState();
@@ -16,10 +16,15 @@ export default function App() {
     longitude: 92.8358069,
   });
   const [cityName, setCityName] = useState(null);
-
+  const [isSignedIn, setIsSignedIn] = useState(false);
   useEffect(() => {
-    getData("uid")
-      .then((uid) => setUid(uid))
+    getData("uid").then((uid) => {
+      setUid(uid);
+    });
+    getData("isSignedIn")
+      .then((data) => setIsSignedIn(data))
+      // .then(() => removeData("isSignedIn"))
+      // .then(() => setIsSignedIn(false))
       .then(() => setLoading(false));
   }, []);
 
@@ -31,7 +36,7 @@ export default function App() {
         value={{ uid, location, cityName, setUid, setLocation, setCityName }}
       >
         <NavigationContainer>
-          {uid ? <AppStack /> : <AuthStack />}
+          {isSignedIn ? <AppStack /> : <AuthStack />}
         </NavigationContainer>
       </UserContext.Provider>
     );

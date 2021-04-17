@@ -19,13 +19,17 @@ import moment from "moment";
 const ViewRequestsScreen = ({ navigation }) => {
   const { cityName } = useContext(UserContext);
   const [requestList, setRequestList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get("/request/" + cityName).then((response) => {
-      if (response.ok) {
-        setRequestList(response.data);
-      }
-    });
+    api
+      .get("/request/" + cityName)
+      .then((response) => {
+        if (response.ok) {
+          setRequestList(response.data);
+        }
+      })
+      .then(() => setLoading(false));
   }, []);
   return (
     <FlatList
@@ -51,7 +55,11 @@ const ViewRequestsScreen = ({ navigation }) => {
             justifyContent: "center",
           }}
         >
-          <ActivityIndicator color={Colors.blood} size={60} />
+          {loading ? (
+            <ActivityIndicator color={Colors.blood} size={60} />
+          ) : (
+            <SubTitle>There are no active requests in your area</SubTitle>
+          )}
         </View>
       }
       renderItem={({ item }) => (

@@ -1,33 +1,45 @@
 // This will display profile details about the registered user
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import SubTitle from "../components/SubTitle";
 import { TextBubble } from "../components/TextBubble";
+import { CustomButton } from "../components/CustomButton";
 import Title from "../components/Title";
 import Colors from "../config/colors";
 import { api } from "../config/endpoints";
+import UserContext from "../hooks/userContext";
+import { removeData } from "../utils/asyncStorage";
+import { SimpleCard } from "../components/SimpleCard";
 
-const ProfileScreen = ({ navigation, route }) => {
+const MyProfile = ({ navigation, route }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [lastDonated, setLastDonated] = useState("Loading...");
-  let { uid } = route.params;
+  const { uid, setUid } = useContext(UserContext);
+  // created requests
+  const [createdRequests, SetCreatedRequests] = useState([]);
+  // acceptedRequests
+  const [acceptedRequests, setAcceptedrequests] = useState([]);
+  // completedRequests
+  const [completedRequests, setCompletedRequests] = useState([]);
+  // rejected requests ==> incompleteRequests
+  const [rejectedRequests, setRejectedRequests] = useState([]);
+
   useEffect(() => {
     api
       .get("/user", { uid })
       .then((response) => {
         if (response.ok) {
-          if (response.data?.lastDonated == null) {
-            setLastDonated("Use hasn't donated blood before");
-          } else {
-            setLastDonated(moment(response.data.lastDonated).toNow());
-          }
           setUserData(response.data);
+          SetCreatedRequests(response.data.createdRequests);
+          setAcceptedrequests(response.data.acceptedRequests);
+          setCompletedRequests(response.data.completedRequests);
+          setRejectedRequests(response.data.incompleteRequests);
         } else {
           console.warn("Houston, we might have an internet problem");
         }
       })
-      .then(() => setLoading(false));
+      .then(() => setLoading(false))
+      .then(() => console.log(userData));
   }, []);
 
   if (loading) {
@@ -39,39 +51,51 @@ const ProfileScreen = ({ navigation, route }) => {
   } else {
     return (
       <View style={[styles.screen, { padding: 8 }]}>
-        <Container row>
+        <SimpleCard row>
           <TextBubble
             placeholder={userData?.bloodType}
             padding={16}
             margin={12}
             selected
           />
-          <View>
+          <View style={{ flex: 1 }}>
             <Title>{userData.name}</Title>
             <SubTitle>{userData.currentLocation}</SubTitle>
             <SubTitle>{`Verification Status: ${
               userData.verified ? "verified" : "Not Verified"
             }`}</SubTitle>
           </View>
-        </Container>
+        </SimpleCard>
         <Title>Last Donated on: </Title>
-        <Container style={[{ flex: 1 }, styles.center]}>
-          <SubTitle>{lastDonated}</SubTitle>
-        </Container>
+        <SimpleCard full style={[styles.center]}>
+          <SubTitle>use moment js to display .fromnow</SubTitle>
+        </SimpleCard>
         <Title>Created Requests: </Title>
-        <Container style={[{ flex: 1 }, styles.center]}>
+        <SimpleCard full style={[styles.center]}>
           <SubTitle>Requests created in the past</SubTitle>
-        </Container>
+        </SimpleCard>
         <Title>Accepted Requests: </Title>
-        <Container style={[{ flex: 1 }, styles.center]}>
+        <SimpleCard full style={[styles.center]}>
           <SubTitle>Requests accepted in the past</SubTitle>
-        </Container>
+        </SimpleCard>
+        <CustomButton
+          title="SignOut"
+          color={Colors.blood}
+          titleColor={Colors.purewhite}
+          margin={8}
+          onPress={() => {
+            removeData("uid").then(() => {
+              setUid(null);
+            });
+            removeData("isSignedIn");
+          }}
+        />
       </View>
     );
   }
 };
 
-export default ProfileScreen;
+export default MyProfile;
 
 const styles = StyleSheet.create({
   screen: {
@@ -80,23 +104,3 @@ const styles = StyleSheet.create({
   },
   center: { alignItems: "center", justifyContent: "center" },
 });
-
-const Container = ({ children, style, row }) => {
-  return (
-    <View
-      style={[
-        {
-          backgroundColor: Colors.purewhite,
-          padding: 8,
-          borderRadius: 8,
-          margin: 4,
-          flexDirection: row && "row",
-          alignItems: "center",
-        },
-        style,
-      ]}
-    >
-      {children}
-    </View>
-  );
-};

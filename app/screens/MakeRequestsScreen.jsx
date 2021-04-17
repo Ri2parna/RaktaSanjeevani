@@ -15,7 +15,7 @@ import UserContext from "../hooks/userContext";
 const MakeRequestsScreen = ({ navigation, city = "Tezpur" }) => {
   const [requestCount, setRequestCount] = useState(0);
   const [ListOfDonors, setListOfDonors] = useState([]);
-  const { cityName } = useContext(UserContext);
+  const { uid, cityName } = useContext(UserContext);
   useEffect(() => {
     api.get("/requestcount/" + cityName).then((response) => {
       if (response.ok) {
@@ -23,12 +23,12 @@ const MakeRequestsScreen = ({ navigation, city = "Tezpur" }) => {
       }
     });
 
-    api.get("/donors/" + "Tezpur").then((response) => {
+    api.get("/donors/" + cityName).then((response) => {
       if (response.ok) {
         setListOfDonors(response.data);
       }
     });
-  }, []);
+  }, [cityName, uid]);
   return (
     <Screen color={Colors.white}>
       <View style={{ width: "100%", height: "100%" }}>
@@ -96,9 +96,7 @@ const MakeRequestsScreen = ({ navigation, city = "Tezpur" }) => {
           renderItem={({ item }) => (
             <DonorCard
               {...item}
-              onPress={() =>
-                navigation.navigate("RequestDetails", { rid: item._id })
-              }
+              onPress={() => navigation.navigate("Profile", { uid })}
             />
           )}
           keyExtractor={(item, index) => item._id}
@@ -174,3 +172,82 @@ const DonorCard = ({
     </TouchableOpacity>
   );
 };
+/*
+
+    <FlatList
+      contentContainerStyle={
+        ([styles.shadow],
+        {
+          padding: 8,
+          borderRadius: 4,
+          backgroundColor: "salmon",
+          height: "100%",
+        })
+      }
+      ListHeaderComponent={() => (
+        <View>
+          <Title size={20} paddingV={8} padding={8} color="#0A0819">
+            Donors Nearby
+          </Title>
+          <View style={{ alignItems: "center" }}>
+            <Title color={Colors.white} size={24}>
+              {requestCount}
+            </Title>
+            <SubTitle color={Colors.white}>Active Requests</SubTitle>
+            <SubTitle size={12} color={Colors.white}>
+              Nearby
+            </SubTitle>
+          </View>
+        </View>
+      )}
+      ListEmptyComponent={() => {
+        return (
+          <View style={styles.center}>
+            <ActivityIndicator color={Colors.blood} size={60} />
+          </View>
+        );
+      }}
+      data={ListOfDonors}
+      renderItem={({ item }) => (
+        <DonorCard
+          {...item}
+          onPress={() => navigation.navigate("Profile", { uid })}
+        />
+      )}
+      keyExtractor={(item, index) => item._id}
+    />
+  );
+};
+
+export default MakeRequestsScreen;
+
+/*
+
+<Screen color={Colors.white}>
+      <View style={{ width: "100%", height: "100%" }}>
+        <LinearGradient
+          colors={["#ff4d4d", "#ff217a"]}
+          style={{
+            width: "100%",
+            minHeight: "24%",
+            maxHeight: "24%",
+            alignItems: "center",
+            flex: 1,
+          }}
+        >
+          <View style={styles.cta}>
+            
+            <CustomButton
+              title="Add Request"
+              icon="add"
+              iconColor={Colors.blood}
+              onPress={() => navigation.navigate("NewRequest")}
+              padding={8}
+            />
+          </View>
+        </LinearGradient>
+        
+      </View>
+    </Screen>
+
+    */

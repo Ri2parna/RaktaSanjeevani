@@ -10,6 +10,7 @@ export const CustomButton = ({
   margin,
   padding,
   color,
+  titleColor,
   onPress,
   icon,
   iconColor,
@@ -27,6 +28,7 @@ export const CustomButton = ({
           justifyContent: icon ? "space-between" : "center",
           alignItems: "center",
           margin: margin,
+          backgroundColor: color || "white",
         },
         styles.shadow,
       ]}
@@ -39,7 +41,7 @@ export const CustomButton = ({
           color={iconColor || "black"}
         />
       ) : null}
-      <Title color={color || Colors.blood} size={textSize || 20} center>
+      <Title color={titleColor || Colors.blood} size={textSize || 20} center>
         {title}
       </Title>
     </TouchableOpacity>

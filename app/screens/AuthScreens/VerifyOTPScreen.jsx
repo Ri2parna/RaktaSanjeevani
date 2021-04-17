@@ -1,16 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Text,
-  Image,
   View,
   StyleSheet,
   TextInput,
   Platform,
   ActivityIndicator,
   StatusBar,
-  Dimensions,
 } from "react-native";
-import Screen from "../../components/Screen";
 import Title from "../../components/Title";
 import SubTitle from "../../components/SubTitle";
 import Colors from "../../config/colors";
@@ -44,175 +41,163 @@ const VerifyOTPScreen = ({ navigation }) => {
   const [confirmError, setConfirmError] = React.useState();
   const [confirmInProgress, setConfirmInProgress] = React.useState(false);
   const isConfigValid = !!FIREBASE_CONFIG.apiKey;
-
   const [countryCode, setCountryCode] = useState("+91");
   const { uid, setUid } = useContext(UserContext);
+
+  const handleVerification = async () => {
+    const phoneProvider = new firebase.auth.PhoneAuthProvider();
+    try {
+      setVerifyError(undefined);
+      setVerifyInProgress(true);
+      setVerificationId("");
+      const verificationId = await phoneProvider.verifyPhoneNumber(
+        countryCode + phoneNumber,
+        // @ts-ignore
+        recaptchaVerifier.current
+      );
+      setVerifyInProgress(false);
+      setVerificationId(verificationId);
+      verificationCodeTextInput.current?.focus();
+    } catch (err) {
+      setVerifyError(err);
+      setVerifyInProgress(false);
+    }
+  };
+  const handleOtpVerification = async () => {
+    try {
+      setConfirmError(undefined);
+      setConfirmInProgress(true);
+      const credential = firebase.auth.PhoneAuthProvider.credential(
+        verificationId,
+        verificationCode
+      );
+      const authResult = await firebase.auth().signInWithCredential(credential);
+      setConfirmInProgress(false);
+      setVerificationId("");
+      setVerificationCode("");
+      verificationCodeTextInput.current?.clear();
+
+      api
+        .get("/registration", {
+          phone: phoneNumber,
+        })
+        .then((response) => {
+          // response.ok == user is not registered earlier
+          // response.problem == user is already registered
+
+          if (response.ok) {
+            navigation.navigate("Register", { phoneNumber });
+          } else {
+            setUid(response.data.uid);
+            if (uid !== null) {
+              storeData("isSignedIn", true);
+              storeData("uid", uid);
+              navigation.navigate("AppStack", { name: "Home" });
+            }
+          }
+        });
+    } catch (err) {
+      setConfirmError(err);
+      setConfirmInProgress(false);
+    }
+  };
+
   return (
-    <Screen color={Colors.purewhite}>
-      <View
-        style={{
-          paddingTop: Platform.OS == "android" ? StatusBar.currentHeight : 0,
-          width: "100%",
-          height: "100%",
-          padding: 16,
-        }}
-      >
-        <FirebaseRecaptcha.FirebaseRecaptchaVerifierModal
-          ref={recaptchaVerifier}
-          firebaseConfig={FIREBASE_CONFIG}
+    <View style={styles.screen}>
+      <FirebaseRecaptcha.FirebaseRecaptchaVerifierModal
+        ref={recaptchaVerifier}
+        firebaseConfig={FIREBASE_CONFIG}
+      />
+      <Title size={28} marginTop={44}>
+        Verify your phone
+      </Title>
+      <SubTitle size={16}>
+        Enter your phone number so that we can sign you up
+      </SubTitle>
+      <Text style={styles.customText}>Phone Number:</Text>
+      <Container row>
+        <CustomTextInput
+          style={{ marginRight: 8 }}
+          marginVertical={8}
+          placeholder={"+91"}
+          autoFocus={isConfigValid}
+          autoCompleteType="tel"
+          keyboardType="phone-pad"
+          textContentType="telephoneNumber"
+          editable={false}
+          onChangeText={(countryCode) => setCountryCode(countryCode)}
         />
-        <Title size={28} marginTop={44}>
-          Verify your phone
-        </Title>
-        <SubTitle size={16}>
-          Enter your phone number so that we can sign you up
-        </SubTitle>
-        <Text style={styles.customText}>Phone Number:</Text>
-        <Container row>
-          <CustomTextInput
-            marginVertical={8}
-            placeholder={"+91"}
-            autoFocus={isConfigValid}
-            autoCompleteType="tel"
-            keyboardType="phone-pad"
-            textContentType="telephoneNumber"
-            editable={false}
-            onChangeText={(countryCode) => setCountryCode(countryCode)}
-          />
-          <CustomTextInput
-            style={{ flex: 1 }}
-            marginVertical={8}
-            placeholder={"99XX XXX XXX"}
-            autoFocus={isConfigValid}
-            autoCompleteType="tel"
-            keyboardType="phone-pad"
-            textContentType="telephoneNumber"
-            editable={!verificationId}
-            onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
-          />
-        </Container>
-
-        <GradientButton
-          title={`${verificationId ? "Resend" : "Send"} Verification Code`}
-          disabled={!phoneNumber}
-          paddingV={8}
-          paddingH={20}
-          onPress={async () => {
-            const phoneProvider = new firebase.auth.PhoneAuthProvider();
-            try {
-              setVerifyError(undefined);
-              setVerifyInProgress(true);
-              setVerificationId("");
-              const verificationId = await phoneProvider.verifyPhoneNumber(
-                countryCode + phoneNumber,
-                // @ts-ignore
-                recaptchaVerifier.current
-              );
-              setVerifyInProgress(false);
-              setVerificationId(verificationId);
-              verificationCodeTextInput.current?.focus();
-            } catch (err) {
-              setVerifyError(err);
-              setVerifyInProgress(false);
-            }
-          }}
+        <CustomTextInput
+          style={{ flex: 1 }}
+          marginVertical={8}
+          placeholder={"99XX XXX XXX"}
+          autoFocus={isConfigValid}
+          autoCompleteType="tel"
+          keyboardType="phone-pad"
+          textContentType="telephoneNumber"
+          editable={!verificationId}
+          onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
         />
+      </Container>
 
-        {verifyError && (
-          <Text style={styles.error}>{`Error: ${verifyError.message}`}</Text>
-        )}
-        {verifyInProgress && <ActivityIndicator style={styles.loader} />}
-        {verificationId ? (
-          <Text style={styles.success}>
-            A verification code has been sent to your phone
-          </Text>
-        ) : undefined}
-        <Text style={styles.customText}>Verification Code: </Text>
-        <TextInput
-          ref={verificationCodeTextInput}
-          style={
-            !!verificationId
-              ? [styles.textInput, styles.editable]
-              : styles.textInput
-          }
-          editable={!!verificationId}
-          placeholder="12XXXX"
-          onChangeText={(verificationCode) =>
-            setVerificationCode(verificationCode)
-          }
-        />
+      <GradientButton
+        title={`${verificationId ? "Resend" : "Send"} Verification Code`}
+        disabled={!phoneNumber}
+        paddingV={12}
+        paddingH={24}
+        onPress={() => handleVerification()}
+      />
 
-        <GradientButton
-          title="Confirm Verification Code"
-          disabled={!verificationCode}
-          paddingV={12}
-          paddingH={24}
-          onPress={async () => {
-            try {
-              // setConfirmError(undefined);
-              // setConfirmInProgress(true);
-              // const credential = firebase.auth.PhoneAuthProvider.credential(
-              //   verificationId,
-              //   verificationCode
-              // );
-              // const authResult = await firebase
-              //   .auth()
-              //   .signInWithCredential(credential);
-              // setConfirmInProgress(false);
-              // setVerificationId("");
-              // setVerificationCode("");
-              // verificationCodeTextInput.current?.clear();
+      {verifyError && (
+        <Text style={styles.error}>{`Error: ${verifyError.message}`}</Text>
+      )}
+      {verifyInProgress && <ActivityIndicator style={styles.loader} />}
+      {verificationId ? (
+        <Text style={styles.success}>
+          A verification code has been sent to your phone
+        </Text>
+      ) : undefined}
+      <Text style={styles.customText}>Verification Code: </Text>
+      <TextInput
+        ref={verificationCodeTextInput}
+        style={
+          !!verificationId
+            ? [styles.textInput, styles.editable]
+            : styles.textInput
+        }
+        editable={!!verificationId}
+        keyboardType="phone-pad"
+        placeholder="12XXXX"
+        onChangeText={(verificationCode) =>
+          setVerificationCode(verificationCode)
+        }
+      />
 
-              // api
-              //   .get("/registration", {
-              //     phone: phoneNumber,
-              //   })
-              //   .then((response) => {
-              //     if (response.problem) {
-              //       navigation.navigate("Register", { phoneNumber });
-              //     } else {
-              //       navigation.navigate("AppStack");
-              //     }
-              //   });
-              setUid("6076f6f580f3a7002199bd3d");
-              storeData("uid", "6076f6f580f3a7002199bd3d").then(() =>
-                navigation.navigate("AppStack")
-              );
-            } catch (err) {
-              setConfirmError(err);
-              setConfirmInProgress(false);
-            }
-          }}
-        />
+      <GradientButton
+        title="Confirm Verification Code"
+        disabled={!verificationCode}
+        paddingV={12}
+        paddingH={24}
+        onPress={() => handleOtpVerification()}
+      />
 
-        {confirmError && (
-          <Text style={styles.error}>{`Error: ${confirmError.message}`}</Text>
-        )}
-        {confirmInProgress && <ActivityIndicator style={styles.loader} />}
-
-        {!isConfigValid && (
-          <View style={styles.overlay} pointerEvents="none">
-            <Text style={styles.overlayText}>
-              To get started, set a valid FIREBASE_CONFIG in App.tsx.
-            </Text>
-          </View>
-        )}
-        <Image
-          source={require("../../assets/mailboxIcon.png")}
-          style={{
-            height: 400,
-            width: Dimensions.get("screen").width,
-            alignSelf: "center",
-          }}
-        />
-      </View>
-    </Screen>
+      {confirmError && (
+        <Text style={styles.error}>{`Error: ${confirmError.message}`}</Text>
+      )}
+      {confirmInProgress && <ActivityIndicator style={styles.loader} />}
+    </View>
   );
 };
 
 export default VerifyOTPScreen;
 
 const styles = StyleSheet.create({
+  screen: {
+    paddingTop: Platform.OS == "android" ? StatusBar.currentHeight : 0,
+    width: "100%",
+    height: "100%",
+    padding: 16,
+  },
   customText: {
     fontWeight: "bold",
     color: Colors.secondary,

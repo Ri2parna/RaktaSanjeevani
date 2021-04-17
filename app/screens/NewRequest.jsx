@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { Button, CheckBox, Image, StyleSheet, View } from "react-native";
+import React, { useState, useContext } from "react";
+import { Button, StyleSheet, View } from "react-native";
 import Screen from "../components/Screen";
 import Title from "../components/Title";
 import Colors from "../config/colors";
 import CustomTextInput from "../components/CustomTextInput";
-
+import DateTimePicker from "@react-native-community/datetimepicker";
+import moment from "moment";
 import { api } from "../config/endpoints";
+import UserContext from "../hooks/userContext";
 
 import TransDarkLogo from "../assets/transUserDark.svg";
 import { Container } from "../components/Container";
@@ -14,24 +16,62 @@ import { GradientButton } from "../components/GradientButton";
 import { MaleLogo } from "../components/MaleLogo";
 import { FemaleLogo } from "../components/FemaleLogo";
 import { ScrollView } from "react-native-gesture-handler";
+import SubTitle from "../components/SubTitle";
+import { CustomButton } from "../components/CustomButton";
 
 const NewRequest = ({ navigation, route }) => {
   const [bloodType, setBloodType] = useState(null);
   const [gender, setGender] = useState(null);
-  const [name, setName] = useState(null);
+  const [patientName, setPatientName] = useState(null);
   const [hospital, setHospital] = useState(null);
-  const [pincode, setPincode] = useState(null);
+  const [units, setUnits] = useState(null);
+  const [validity, setValidity] = useState(null);
+  const { uid, location, cityName } = useContext(UserContext);
 
-  const submitBloodRequest = () => {
-    api.post("/request", {
-      bloodType,
-      units: "",
-      patientName: name,
-      from: "uid",
-      validity: "",
-      location: "",
-      hospital: "",
-    });
+  const [date, setDate] = useState(moment.now());
+
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === "ios");
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
+  const showTimepicker = () => {
+    showMode("time");
+  };
+
+  const submitBloodRequest = async () => {
+    api
+      .post("/request", {
+        patientName,
+        bloodType,
+        units,
+        from: uid,
+        validity: date,
+        cityName,
+        location,
+        hospital,
+      })
+      .then((response) => {
+        if (response.ok) {
+          alert("Success");
+          navigation.navigate("Home");
+        } else {
+          console.warn("Houston, there has been an error");
+        }
+      });
   };
 
   return (
@@ -44,29 +84,48 @@ const NewRequest = ({ navigation, route }) => {
         }}
       >
         <Container column>
+          <Title margin={8}>Patient Name: </Title>
           <CustomTextInput
-            placeholder="Name"
-            width="90%"
-            margin={8}
-            padding={16}
-            onChangeText={(name) => setName(name)}
+            placeholder="Patient Name"
+            width="100%"
+            onChangeText={(name) => setPatientName(name)}
           />
+          <Title margin={8}>Hospital admitted in: </Title>
           <CustomTextInput
             placeholder="Hospital Name"
-            width="90%"
-            margin={8}
-            padding={16}
-            onChangeText={(hname) => setHospital(hname)}
+            width="100%"
+            onChangeText={(name) => setHospital(name)}
           />
+          <Title margin={8}>Units of blood required:</Title>
           <CustomTextInput
-            placeholder="Pin Code"
-            onChangeText={(pincode) => setPincode(pincode)}
-            width="90%"
-            margin={8}
-            padding={16}
+            keyboardType="phone-pad"
+            placeholder="Units Required"
+            onChangeText={(units) => setUnits(units)}
+            width="100%"
           />
+          <Title margin={8}>Blood to be required by:</Title>
+          <Container row>
+            <CustomTextInput
+              style={{ flex: 1, marginHorizontal: 8 }}
+              placeholder={moment(date).format("L")}
+              editable={false}
+            />
+            <CustomButton title={"Select date"} onPress={showDatepicker} />
+          </Container>
         </Container>
-        <Title size={24} padding={16}>
+        <View>
+          {show && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={mode}
+              is24Hour={true}
+              display="default"
+              onChange={onChange}
+            />
+          )}
+        </View>
+        <Title size={20} padding={16}>
           Select Blood Group
         </Title>
         <Container row>
@@ -140,7 +199,7 @@ const NewRequest = ({ navigation, route }) => {
             onPress={() => setGender("female")}
           />
         </Container>
-        <View style={{ flex: 1 }} />
+
         <Container row>
           <View
             style={{
@@ -149,10 +208,10 @@ const NewRequest = ({ navigation, route }) => {
               justifyContent: "space-evenly",
             }}
           >
-            <CheckBox />
+            {/* <CheckBox />
             <Title padding={12}>
               Do you want to make you contact number visible for others?
-            </Title>
+            </Title> */}
           </View>
         </Container>
         <GradientButton
@@ -160,10 +219,12 @@ const NewRequest = ({ navigation, route }) => {
           margin={8}
           paddingV={16}
           onPress={() => {
-            alert("Success");
-            navigation.navigate("Home");
+            submitBloodRequest();
           }}
         />
+        <SubTitle size={12} padding={8} color={Colors["grey-6"]}>
+          * Your location will be recorded for this request
+        </SubTitle>
       </ScrollView>
     </Screen>
   );

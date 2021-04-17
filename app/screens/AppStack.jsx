@@ -2,37 +2,48 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./HomeScreen";
 import ProfileScreen from "./ProfileScreen";
-import UploadIDScreen from "./UploadIDScreen";
 import MakeRequestsScreen from "./MakeRequestsScreen";
 import ViewRequestsScreen from "./ViewRequestsScreen";
 import RequestDetailsScreen from "./RequestDetailsScreen";
 import NewRequest from "./NewRequest";
 import Colors from "../config/colors";
+import MyProfile from "./MyProfile";
+import { Image, View } from "react-native";
+import Title from "../components/Title";
 
 const Stack = createStackNavigator();
 
 const AppStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: "#ff4d4d", elevation: 0 },
+        headerTintColor: Colors.white,
+      }}
+    >
       <Stack.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          headerStyle: { backgroundColor: "#ff4d4d", elevation: 0 },
-          headerTintColor: Colors.white,
           headerLeft: null,
-          headerTitle: "RaktaSanjeevani",
-          headerTitleStyle: { fontWeight: "bold", fontSize: 22 },
+          headerTitle: (props) => (
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Image
+                source={require("../assets/sanjeevaniLogo.png")}
+                style={{ height: 32, width: 32, marginRight: 8 }}
+              />
+              <Title size={22} color={Colors.purewhite}>
+                RaktaSanjeevani
+              </Title>
+            </View>
+          ),
         }}
       />
       <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="UploadID" component={UploadIDScreen} />
       <Stack.Screen
         name="MakeRequests"
         component={MakeRequestsScreen}
         options={{
-          headerStyle: { backgroundColor: "#ff4d4d", elevation: 0 },
-          headerTintColor: Colors.white,
           headerTitle: "Request for blood",
         }}
       />
@@ -40,8 +51,6 @@ const AppStack = () => {
         name="NewRequest"
         component={NewRequest}
         options={{
-          headerStyle: { backgroundColor: "#ff4d4d", elevation: 0 },
-          headerTintColor: Colors.white,
           headerTitle: "New Blood request",
         }}
       />
@@ -50,9 +59,14 @@ const AppStack = () => {
         name="RequestDetails"
         component={RequestDetailsScreen}
         options={{
-          // headerStyle: { backgroundColor: "#ff4d4d", elevation: 0 },
-          // headerTintColor: Colors.white,
           headerTitle: "Request Details",
+        }}
+      />
+      <Stack.Screen
+        name="MyProfile"
+        component={MyProfile}
+        options={{
+          headerTitle: "Your Profile Details",
         }}
       />
     </Stack.Navigator>

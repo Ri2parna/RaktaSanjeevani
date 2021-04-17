@@ -16,6 +16,7 @@ const CustomTextInput = ({
   editable,
   marginVertical,
   onChangeText,
+  placeholderTextColor,
 }) => {
   return (
     <TextInput
@@ -26,15 +27,14 @@ const CustomTextInput = ({
       editable={editable}
       placeholder={placeholder}
       onChangeText={onChangeText}
-      placeholderTextColor={Colors["grey-4"]}
+      placeholderTextColor={placeholderTextColor || Colors["grey-4"]}
       style={[
         styles.shadow,
         {
           backgroundColor: `#f6f6f6`,
           padding: padding || 8,
           paddingHorizontal: 24,
-          marginRight: 8,
-          borderRadius: 816,
+          borderRadius: 80,
           width: width,
           margin: margin,
           marginVertical: marginVertical,

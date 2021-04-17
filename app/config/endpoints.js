@@ -11,7 +11,7 @@
 import { create } from "apisauce";
 
 const api = create({
-  baseURL: "https://f19f9c7c4b7e.ngrok.io",
+  baseURL: "http://76e9f0b279f8.ngrok.io",
 });
 
 module.exports = { api };

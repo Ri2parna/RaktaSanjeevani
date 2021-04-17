@@ -23,7 +23,16 @@ const storeData = async (key, value) => {
   }
 };
 
+const removeData = async (key = "isUserLoggedIn") => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (e) {
+    console.log(e); // error
+  }
+};
+
 module.exports = {
   getData,
   storeData,
+  removeData,
 };

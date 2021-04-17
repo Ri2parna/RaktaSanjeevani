@@ -3,13 +3,15 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
 import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { Switch } from "react-native-gesture-handler";
 import { CustomButton } from "../components/CustomButton";
 import SubTitle from "../components/SubTitle";
 import Title from "../components/Title";
 import Colors from "../config/colors";
 import { api } from "../config/endpoints";
 import UserContext from "../hooks/userContext";
-import { getData } from "../utils/asyncStorage";
+import { removeData } from "../utils/asyncStorage";
+import { SimpleCard } from "../components/SimpleCard";
 
 // Here location object refers to the co-ordinates
 // cityName refers to the location
@@ -19,17 +21,32 @@ const HomeScreen = ({ navigation, route }) => {
   const [donorCount, setDonorCount] = useState(null);
   const [locationErrorMsg, setLocationErrorMsg] = useState(null);
   const [requestCount, setRequestCount] = useState(null);
+  const [lastDonated, setLastDonated] = useState(null);
+  const [activeStatus, setActiveStatus] = useState(false);
+
   const { uid, location, cityName, setCityName, setLocation } = useContext(
     UserContext
   );
 
+  // user details
+  const [username, setUsername] = useState(null);
+  const sendLocationToServer = async (cname) => {
+    // update location on server
+    api
+      .post("/user", { uid, currentLocation: cname, coords: location })
+      .then((response) => {
+        if (response.problem) {
+          console.warn("Houston, we have a problem with updating location");
+        }
+      });
+  };
   const convertToDistrict = async () => {
     // Geocoding URL Links
     // "http://api.positionstack.com/v1/reverse?access_key=943f706d873bce76d1de51755967d504&query=" +
     // `${location.coords.latitude},${location.coords.longitude}`,
 
     // "http://api.positionstack.com/v1/reverse?access_key=943f706d873bce76d1de51755967d504&query=26.6998045,92.8358069"
-    axios
+    await axios
       .get("http://api.positionstack.com/v1/reverse", {
         params: {
           access_key: "943f706d873bce76d1de51755967d504",
@@ -39,6 +56,7 @@ const HomeScreen = ({ navigation, route }) => {
       .then(({ data }) => {
         let city = `${data.data[0].county}`.toLowerCase();
         setCityName(city);
+        sendLocationToServer(city);
       });
   };
   const storeCurrentLocation = async () => {
@@ -48,20 +66,16 @@ const HomeScreen = ({ navigation, route }) => {
       setErrorMsg("Permission to access location was denied");
       return;
     }
-
     let currentLocation = await Location.getCurrentPositionAsync({});
-
     setLocation({
       latitude: currentLocation.coords.latitude,
       longitude: currentLocation.coords.longitude,
     });
-    // update location on server
-    api.post("/user", { uid, currentLocation: cityName }).then((response) => {
-      if (response.problem) {
-        console.warn("Houston, we have a problem with updating location");
-      }
-    });
   };
+
+  // switch
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   // prevents moving back to the login screen after succesful login
   useEffect(() =>
@@ -69,11 +83,32 @@ const HomeScreen = ({ navigation, route }) => {
       e.preventDefault();
     })
   );
+
   useEffect(() => {
-    getData("uid");
-    storeCurrentLocation().then(() => convertToDistrict());
+    if (!uid) {
+      console.warn("Uid isn't valid or not found, please check");
+      removeData("isSignedIn");
+    }
+
+    api.get("/user", { uid }).then((response) => {
+      if (response.ok) {
+        setUsername(response.data.name);
+        setActiveStatus(response.data.active);
+        setIsEnabled(response.data.active);
+        if (response.data?.lastDonated == null) {
+          setLastDonated(
+            "You haven't donated before, do your part in saving someone's life"
+          );
+        } else {
+          setLastDonated(moment(response.data.lastDonated).toNow());
+        }
+      } else {
+        console.warn("Houston, we have a problem!");
+      }
+    });
     api.get("/donorcount").then(({ data }) => setDonorCount(data.count));
     api.get("/requestcount").then(({ data }) => setRequestCount(data.count));
+    storeCurrentLocation().then(() => convertToDistrict());
   }, []);
 
   return (
@@ -120,28 +155,11 @@ const HomeScreen = ({ navigation, route }) => {
           />
         </View>
       </LinearGradient>
-      <View style={{ flex: 2, backgroundColor: "pink" }}>
-        <View
-          style={{
-            flexDirection: "row",
-            padding: 8,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+      <View style={{ flex: 2, backgroundColor: "pink", paddingHorizontal: 4 }}>
+        <SimpleCard row>
           <Title>Current Location: </Title>
           {cityName ? (
-            <>
-              <Text
-                style={{
-                  marginRight: 8,
-                  color: Colors["grey-6"],
-                  fontWeight: "bold",
-                }}
-              >
-                {cityName}
-              </Text>
-            </>
+            <SubTitle color={Colors["grey-6"]}>{cityName}</SubTitle>
           ) : (
             <ActivityIndicator
               size={32}
@@ -156,7 +174,40 @@ const HomeScreen = ({ navigation, route }) => {
               storeCurrentLocation().then(() => convertToDistrict());
             }}
           />
-        </View>
+        </SimpleCard>
+        <Title margin={4}>User details</Title>
+        <SimpleCard row>
+          <Title>{username}</Title>
+          <CustomButton
+            title="View Profile"
+            textSize={14}
+            onPress={() => {
+              navigation.navigate("MyProfile");
+            }}
+          />
+        </SimpleCard>
+        <Title margin={4}>Active Status</Title>
+        <SimpleCard row>
+          <SubTitle
+            size={14}
+            color={activeStatus ? Colors.success : Colors["grey-8"]}
+          >
+            {activeStatus ? "Active" : "InActive"}
+          </SubTitle>
+          <Switch
+            trackColor={{ false: Colors.darkBlue, true: "salmon" }}
+            thumbColor={isEnabled ? Colors.bloodRed : "aliceblue"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+        </SimpleCard>
+        <Title margin={4}>Blood Donation history</Title>
+        <SimpleCard full>
+          <SubTitle size={14} color={Colors["grey-8"]}>
+            {lastDonated}
+          </SubTitle>
+        </SimpleCard>
       </View>
     </View>
   );
@@ -171,7 +222,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-around",
     width: "100%",
   },
-  locationCard: {
+  locationSimpleCard: {
     backgroundColor: Colors.primary,
     flex: 1,
     margin: 24,

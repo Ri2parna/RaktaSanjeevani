@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-import Screen from "../components/Screen";
+import { View, StyleSheet } from "react-native";
 import Title from "../components/Title";
 import SubTitle from "../components/SubTitle";
 import MapView, { Callout, Marker } from "react-native-maps";
@@ -12,45 +11,55 @@ import Colors from "../config/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TextBubble } from "../components/TextBubble";
 import moment from "moment";
+import { CustomButton } from "../components/CustomButton";
+import { SimpleCard } from "../components/SimpleCard";
 
 const RequestDetailsScreen = ({ navigation, route }) => {
   const { uid, location } = useContext(UserContext);
-  const { rid } = route.params;
+  const rid = route.params._id; // the id of each request is returned as _id
   const [requestData, setRequestData] = useState(null);
+  const acceptRequest = () => {
+    api.post("/acceptrequest", { rid, acceptedBy: uid }).then((response) => {
+      if (response.ok) {
+        // do something
+        alert("Your request has been accepted");
+      } else {
+        // raise and error
+      }
+    });
+  };
   useEffect(() => {
-    api
-      .get("/request", { rid: "6077ee17de973c35e3d0c545" })
-      .then((response) => {
-        if (response.ok) {
-          setRequestData(response.data);
-          console.log(response.data);
-        }
-      });
+    api.get("/request", { rid }).then((response) => {
+      if (response.ok) {
+        setRequestData(response.data);
+      }
+    });
   }, []);
   return (
     <View style={{ width: "100%", height: "100%", padding: 8 }}>
       <View style={{ flex: 1 }}>
         <Title size={20}>Patient Details</Title>
-        <Card>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TextBubble placeholder={"AB-"} selected padding={16} margin={8} />
-            <View>
-              <Title size={20} color={Colors.blood}>
-                {requestData?.patientName}
-              </Title>
-              <SubTitle>{requestData?.location}</SubTitle>
-              <SubTitle>{moment(requestData?.createdAt).calendar()}</SubTitle>
-              <SubTitle>{`Units required: ${requestData?.units}`}</SubTitle>
-              <SubTitle>{requestData?.hospital}</SubTitle>
-            </View>
+        <SimpleCard row justifyStart>
+          <TextBubble placeholder={"AB-"} selected padding={16} margin={8} />
+          <View style={{ flex: 1 }}>
+            <Title size={20} color={Colors.blood}>
+              {requestData?.patientName}
+            </Title>
+            <SubTitle>{requestData?.cityName}</SubTitle>
+            <SubTitle>{moment(requestData?.createdAt).calendar()}</SubTitle>
+            <SubTitle>{`Units required: ${requestData?.units}`}</SubTitle>
           </View>
-        </Card>
+        </SimpleCard>
         <Title size={20}>Hospital Details</Title>
-        <Card>
+        <SimpleCard row>
           <SubTitle>{requestData?.hospital}</SubTitle>
-        </Card>
+          <CustomButton title="Get Directions" />
+        </SimpleCard>
+        {/* <Title size={20}>Requestee Details</Title>
+        <SimpleCard>
+          <SubTitle>{requestData?.hospital}</SubTitle>
+        </SimpleCard> */}
         <Title size={20}>Location Details</Title>
-
         <MapView
           initialRegion={{
             latitude: location.latitude,
@@ -78,7 +87,8 @@ const RequestDetailsScreen = ({ navigation, route }) => {
       <GradientButton
         paddingV={12}
         paddingH={24}
-        title="Donate blood to this person"
+        title="Donate plasma to this person"
+        onPress={() => acceptRequest()}
       />
     </View>
   );
@@ -92,20 +102,3 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
-
-const Card = ({ children, onPress }) => {
-  return (
-    <TouchableOpacity
-      disabled={!onPress}
-      style={{
-        padding: 8,
-        borderRadius: 8,
-        backgroundColor: Colors.purewhite,
-        justifyContent: "center",
-        flexShrink: 1,
-      }}
-    >
-      {children}
-    </TouchableOpacity>
-  );
-};
