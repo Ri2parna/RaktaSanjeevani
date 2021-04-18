@@ -11,7 +11,7 @@
 import { create } from "apisauce";
 
 const api = create({
-  baseURL: "http://76e9f0b279f8.ngrok.io",
+  baseURL: "https://raktabackend.herokuapp.com",
 });
 
 module.exports = { api };
