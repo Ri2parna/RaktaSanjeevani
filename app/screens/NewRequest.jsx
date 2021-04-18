@@ -10,7 +10,6 @@ import { api } from "../config/endpoints";
 import UserContext from "../hooks/userContext";
 
 import TransDarkLogo from "../assets/transUserDark.svg";
-import { Container } from "../components/Container";
 import { TextBubble } from "../components/TextBubble";
 import { GradientButton } from "../components/GradientButton";
 import { MaleLogo } from "../components/MaleLogo";
@@ -18,6 +17,7 @@ import { FemaleLogo } from "../components/FemaleLogo";
 import { ScrollView } from "react-native-gesture-handler";
 import SubTitle from "../components/SubTitle";
 import { CustomButton } from "../components/CustomButton";
+import { SimpleCard } from "../components/SimpleCard";
 
 const NewRequest = ({ navigation, route }) => {
   const [bloodType, setBloodType] = useState(null);
@@ -75,158 +75,139 @@ const NewRequest = ({ navigation, route }) => {
   };
 
   return (
-    <Screen color={Colors.purewhite}>
-      <ScrollView
-        style={{
-          height: "100%",
-          width: "100%",
-          padding: 8,
-        }}
-      >
-        <Container column>
-          <Title margin={8}>Patient Name: </Title>
-          <CustomTextInput
-            placeholder="Patient Name"
-            width="100%"
-            onChangeText={(name) => setPatientName(name)}
-          />
-          <Title margin={8}>Hospital admitted in: </Title>
-          <CustomTextInput
-            placeholder="Hospital Name"
-            width="100%"
-            onChangeText={(name) => setHospital(name)}
-          />
-          <Title margin={8}>Units of blood required:</Title>
-          <CustomTextInput
-            keyboardType="phone-pad"
-            placeholder="Units Required"
-            onChangeText={(units) => setUnits(units)}
-            width="100%"
-          />
-          <Title margin={8}>Blood to be required by:</Title>
-          <Container row>
-            <CustomTextInput
-              style={{ flex: 1, marginHorizontal: 8 }}
-              placeholder={moment(date).format("L")}
-              editable={false}
-            />
-            <CustomButton title={"Select date"} onPress={showDatepicker} />
-          </Container>
-        </Container>
-        <View>
-          {show && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={date}
-              mode={mode}
-              is24Hour={true}
-              display="default"
-              onChange={onChange}
-            />
-          )}
-        </View>
-        <Title size={20} padding={16}>
-          Select Blood Group
-        </Title>
-        <Container row>
-          <TextBubble
-            placeholder="A+"
-            padding={16}
-            margin={4}
-            onPress={() => setBloodType("A+")}
-            selected={bloodType == "A+"}
-          />
-          <TextBubble
-            placeholder="A-"
-            padding={16}
-            margin={4}
-            onPress={() => setBloodType("A-")}
-            selected={bloodType == "A-"}
-          />
-          <TextBubble
-            placeholder="B-"
-            padding={16}
-            margin={4}
-            onPress={() => setBloodType("B-")}
-            selected={bloodType == "B-"}
-          />
-          <TextBubble
-            placeholder="B+"
-            padding={16}
-            margin={4}
-            onPress={() => setBloodType("B+")}
-            selected={bloodType == "B+"}
-          />
-          <TextBubble
-            placeholder="O+"
-            padding={16}
-            margin={4}
-            onPress={() => setBloodType("O+")}
-            selected={bloodType == "O+"}
-          />
-          <TextBubble
-            placeholder="O-"
-            padding={16}
-            margin={4}
-            onPress={() => setBloodType("O-")}
-            selected={bloodType == "O-"}
-          />
-          <TextBubble
-            placeholder="AB+"
-            padding={16}
-            margin={4}
-            onPress={() => setBloodType("AB+")}
-            selected={bloodType == "AB+"}
-          />
-          <TextBubble
-            placeholder="AB-"
-            padding={16}
-            margin={4}
-            onPress={() => setBloodType("AB-")}
-            selected={bloodType == "AB-"}
-          />
-        </Container>
-        <Title size={24} padding={16}>
-          Gender
-        </Title>
-        <Container row>
-          <MaleLogo
-            selected={gender == "male"}
-            onPress={() => setGender("male")}
-          />
-          <FemaleLogo
-            selected={gender == "female"}
-            onPress={() => setGender("female")}
-          />
-        </Container>
-
-        <Container row>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-evenly",
-            }}
-          >
-            {/* <CheckBox />
-            <Title padding={12}>
-              Do you want to make you contact number visible for others?
-            </Title> */}
-          </View>
-        </Container>
-        <GradientButton
-          title="SUBMIT"
-          margin={8}
-          paddingV={16}
-          onPress={() => {
-            submitBloodRequest();
-          }}
+    <ScrollView style={{ padding: 4, paddingHorizontal: 8 }}>
+      {/* <View style={styles.screen}> */}
+      <SimpleCard flexStart row>
+        <Title margin={8}>Patient Name: </Title>
+        <CustomTextInput
+          placeholder="Patient Name"
+          width="100%"
+          onChangeText={(name) => setPatientName(name)}
         />
+        <Title margin={8}>Hospital admitted in: </Title>
+        <CustomTextInput
+          placeholder="Hospital Name"
+          width="100%"
+          onChangeText={(name) => setHospital(name)}
+        />
+        <Title margin={8}>Units of blood required:</Title>
+        <CustomTextInput
+          keyboardType="phone-pad"
+          placeholder="Units Required"
+          onChangeText={(units) => setUnits(units)}
+          width="100%"
+        />
+        <Title margin={8}>Blood to be required by:</Title>
+        <SimpleCard row>
+          <CustomTextInput
+            style={{ flex: 1, marginHorizontal: 8 }}
+            placeholder={moment(date).format("L")}
+            editable={false}
+          />
+          <CustomButton title={"Select date"} onPress={showDatepicker} />
+        </SimpleCard>
+      </SimpleCard>
+      <View>
+        {show && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode={mode}
+            is24Hour={true}
+            display="default"
+            onChange={onChange}
+          />
+        )}
+      </View>
+      <Title size={20} padding={16}>
+        Select Blood Group
+      </Title>
+      <SimpleCard row flexStart>
+        <TextBubble
+          placeholder="A+"
+          padding={16}
+          margin={4}
+          onPress={() => setBloodType("A+")}
+          selected={bloodType == "A+"}
+        />
+        <TextBubble
+          placeholder="A-"
+          padding={16}
+          margin={4}
+          onPress={() => setBloodType("A-")}
+          selected={bloodType == "A-"}
+        />
+        <TextBubble
+          placeholder="B-"
+          padding={16}
+          margin={4}
+          onPress={() => setBloodType("B-")}
+          selected={bloodType == "B-"}
+        />
+        <TextBubble
+          placeholder="B+"
+          padding={16}
+          margin={4}
+          onPress={() => setBloodType("B+")}
+          selected={bloodType == "B+"}
+        />
+        <TextBubble
+          placeholder="O+"
+          padding={16}
+          margin={4}
+          onPress={() => setBloodType("O+")}
+          selected={bloodType == "O+"}
+        />
+        <TextBubble
+          placeholder="O-"
+          padding={16}
+          margin={4}
+          onPress={() => setBloodType("O-")}
+          selected={bloodType == "O-"}
+        />
+        <TextBubble
+          placeholder="AB+"
+          padding={16}
+          margin={4}
+          onPress={() => setBloodType("AB+")}
+          selected={bloodType == "AB+"}
+        />
+        <TextBubble
+          placeholder="AB-"
+          padding={16}
+          margin={4}
+          onPress={() => setBloodType("AB-")}
+          selected={bloodType == "AB-"}
+        />
+      </SimpleCard>
+      <Title size={24} padding={16}>
+        Gender
+      </Title>
+      <SimpleCard row flexStart>
+        <MaleLogo
+          selected={gender == "male"}
+          onPress={() => setGender("male")}
+        />
+        <FemaleLogo
+          selected={gender == "female"}
+          onPress={() => setGender("female")}
+        />
+      </SimpleCard>
+      <View style={{ flex: 1 }} />
+      <GradientButton
+        title="SUBMIT"
+        margin={8}
+        paddingV={16}
+        onPress={() => {
+          submitBloodRequest();
+        }}
+      />
+      <SimpleCard flexStart row>
         <SubTitle size={12} padding={8} color={Colors["grey-6"]}>
           * Your location will be recorded for this request
         </SubTitle>
-      </ScrollView>
-    </Screen>
+      </SimpleCard>
+    </ScrollView>
   );
 };
 
@@ -247,5 +228,12 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 80,
+  },
+  screen: {
+    width: "100%",
+    height: "100%",
+    padding: 4,
+    paddingHorizontal: 8,
+    backgroundColor: Colors.purewhite,
   },
 });

@@ -19,11 +19,16 @@ const RequestDetailsScreen = ({ navigation, route }) => {
   const rid = route.params._id; // the id of each request is returned as _id
   const [requestData, setRequestData] = useState(null);
   const acceptRequest = () => {
+    console.log(rid, uid);
     api.post("/acceptrequest", { rid, acceptedBy: uid }).then((response) => {
       if (response.ok) {
         // do something
-        alert("Your request has been accepted");
+        alert(
+          "Thank you for volunteering, we have registered your request to donate."
+        );
       } else {
+        console.warn("Houston, we have a problem");
+        console.log(response.data);
         // raise and error
       }
     });
@@ -53,7 +58,7 @@ const RequestDetailsScreen = ({ navigation, route }) => {
         <Title size={20}>Hospital Details</Title>
         <SimpleCard row>
           <SubTitle>{requestData?.hospital}</SubTitle>
-          <CustomButton title="Get Directions" />
+          {/* <CustomButton title="Get Directions" /> */}
         </SimpleCard>
         {/* <Title size={20}>Requestee Details</Title>
         <SimpleCard>

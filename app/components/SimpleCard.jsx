@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import Colors from "../config/colors";
 
-export const SimpleCard = ({ children, style, row, full }) => {
+export const SimpleCard = ({ children, style, row, full, flexStart }) => {
   return (
     <View
       style={[
@@ -14,6 +14,7 @@ export const SimpleCard = ({ children, style, row, full }) => {
           flexDirection: row && "row",
           alignItems: "center",
           justifyContent: row && "space-between",
+          justifyContent: (flexStart && "flex-start") || "space-between",
           flexWrap: "wrap",
           flex: full ? 1 : 0,
         },
