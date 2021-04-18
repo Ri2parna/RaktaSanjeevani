@@ -15,23 +15,24 @@ import { CustomButton } from "../components/CustomButton";
 import { SimpleCard } from "../components/SimpleCard";
 
 const RequestDetailsScreen = ({ navigation, route }) => {
-  const { uid, location } = useContext(UserContext);
+  const { uid, location, phone } = useContext(UserContext);
   const rid = route.params._id; // the id of each request is returned as _id
   const [requestData, setRequestData] = useState(null);
   const acceptRequest = () => {
-    console.log(rid, uid);
-    api.post("/acceptrequest", { rid, acceptedBy: uid }).then((response) => {
-      if (response.ok) {
-        // do something
-        alert(
-          "Thank you for volunteering, we have registered your request to donate."
-        );
-      } else {
-        console.warn("Houston, we have a problem");
-        console.log(response.data);
-        // raise and error
-      }
-    });
+    api
+      .post("/acceptrequest", { rid, acceptedBy: uid, phone })
+      .then((response) => {
+        if (response.ok) {
+          // do something
+          alert(
+            "Thank you for volunteering, we have registered your request to donate."
+          );
+        } else {
+          console.warn("Houston, we have a problem");
+          // console.log(response.data);
+          // raise and error
+        }
+      });
   };
   useEffect(() => {
     api.get("/request", { rid }).then((response) => {

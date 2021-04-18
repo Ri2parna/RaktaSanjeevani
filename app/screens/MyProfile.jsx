@@ -18,6 +18,7 @@ import { removeData } from "../utils/asyncStorage";
 import { SimpleCard } from "../components/SimpleCard";
 import { FlatList } from "react-native-gesture-handler";
 import moment from "moment";
+import * as Linking from "expo-linking";
 
 const MyProfile = ({ navigation, route }) => {
   const [userData, setUserData] = useState(null);
@@ -33,6 +34,12 @@ const MyProfile = ({ navigation, route }) => {
   // rejected requests ==> incompleteRequests
   const [rejectedRequests, setRejectedRequests] = useState([]);
 
+  const rejectRequest = (rid) => {
+    api.post("/rejectrequest", {
+      acceptedby: uid,
+      rid,
+    });
+  };
   useEffect(() => {
     api
       .get("/user", { uid })
@@ -42,7 +49,7 @@ const MyProfile = ({ navigation, route }) => {
           SetCreatedRequests(response.data.createdRequests);
           setAcceptedrequests(response.data.acceptedRequests);
           setCompletedRequests(response.data.completedRequests);
-          setRejectedRequests(response.data.incompleteRequests);
+          setRejectedRequests(response.data.rejectedRequests);
           response.data?.lastDonated
             ? setLastDonated(moment(response.data.lastDonated).toNow())
             : null;
@@ -100,6 +107,24 @@ const MyProfile = ({ navigation, route }) => {
                   item.item.validity
                 ).calendar()}`}</Text>
               </View>
+              <SimpleCard>
+                <CustomButton
+                  title="Call"
+                  margin={4}
+                  padding={2}
+                  onPress={() => {
+                    Linking.openURL(`tell://${userData.phone}`);
+                  }}
+                />
+                <CustomButton
+                  title="Reject"
+                  titleColor={Colors.purewhite}
+                  color={Colors.blood}
+                  margin={4}
+                  padding={2}
+                  onPress={() => rejectRequest(item.item._id)}
+                />
+              </SimpleCard>
             </SimpleCard>
           )}
           ListEmptyComponent={() => (
@@ -134,7 +159,7 @@ const MyProfile = ({ navigation, route }) => {
         />
         <CustomButton
           title="SignOut"
-          color={Colors.blood}
+          color={Colors.bloodRed}
           titleColor={Colors.purewhite}
           margin={8}
           onPress={() => {

@@ -38,7 +38,7 @@ const ProfileScreen = ({ navigation, route }) => {
           SetCreatedRequests(response.data.createdRequests);
           setAcceptedrequests(response.data.acceptedRequests);
           setCompletedRequests(response.data.completedRequests);
-          setRejectedRequests(response.data.incompleteRequests);
+          setRejectedRequests(response.data.rejectedRequests);
         } else {
           console.warn("Houston, we might have an internet problem");
         }

@@ -22,13 +22,18 @@ const HomeScreen = ({ navigation, route }) => {
   const [locationErrorMsg, setLocationErrorMsg] = useState(null);
   const [requestCount, setRequestCount] = useState(null);
   const [lastDonated, setLastDonated] = useState(null);
-  const [activeStatus, setActiveStatus] = useState(false);
   // switch
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-  const { uid, location, cityName, setCityName, setLocation } = useContext(
-    UserContext
-  );
+  const {
+    uid,
+    phone,
+    setPhone,
+    location,
+    cityName,
+    setCityName,
+    setLocation,
+  } = useContext(UserContext);
   // user details
   const [username, setUsername] = useState(null);
   const sendLocationToServer = async (cname) => {
@@ -90,8 +95,8 @@ const HomeScreen = ({ navigation, route }) => {
     api.get("/user", { uid }).then((response) => {
       if (response.ok) {
         setUsername(response.data.name);
-        setActiveStatus(response.data.active);
         setIsEnabled(response.data.active);
+        setPhone(response.data.phone);
         if (response.data?.lastDonated == null) {
           setLastDonated(
             "You haven't donated before, do your part in saving someone's life"

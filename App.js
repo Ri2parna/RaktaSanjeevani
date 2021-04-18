@@ -17,6 +17,8 @@ export default function App() {
   });
   const [cityName, setCityName] = useState(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [phone, setPhone] = useState();
+
   useEffect(() => {
     getData("uid").then((uid) => {
       setUid(uid);
@@ -33,7 +35,16 @@ export default function App() {
   } else {
     return (
       <UserContext.Provider
-        value={{ uid, location, cityName, setUid, setLocation, setCityName }}
+        value={{
+          uid,
+          location,
+          cityName,
+          setUid,
+          setLocation,
+          phone,
+          setPhone,
+          setCityName,
+        }}
       >
         <NavigationContainer>
           {isSignedIn ? <AppStack /> : <AuthStack />}
