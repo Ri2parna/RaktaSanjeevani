@@ -23,11 +23,12 @@ const HomeScreen = ({ navigation, route }) => {
   const [requestCount, setRequestCount] = useState(null);
   const [lastDonated, setLastDonated] = useState(null);
   const [activeStatus, setActiveStatus] = useState(false);
-
+  // switch
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   const { uid, location, cityName, setCityName, setLocation } = useContext(
     UserContext
   );
-
   // user details
   const [username, setUsername] = useState(null);
   const sendLocationToServer = async (cname) => {
@@ -72,10 +73,6 @@ const HomeScreen = ({ navigation, route }) => {
       longitude: currentLocation.coords.longitude,
     });
   };
-
-  // switch
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   // prevents moving back to the login screen after succesful login
   useEffect(() =>
@@ -190,9 +187,9 @@ const HomeScreen = ({ navigation, route }) => {
         <SimpleCard row>
           <SubTitle
             size={14}
-            color={activeStatus ? Colors.success : Colors["grey-8"]}
+            color={isEnabled ? Colors.success : Colors["grey-8"]}
           >
-            {activeStatus ? "Active" : "InActive"}
+            {isEnabled ? "Active" : "InActive"}
           </SubTitle>
           <Switch
             trackColor={{ false: Colors.darkBlue, true: "salmon" }}
