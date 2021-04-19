@@ -107,24 +107,7 @@ const MyProfile = ({ navigation, route }) => {
                   item.item.validity
                 ).calendar()}`}</Text>
               </View>
-              <SimpleCard>
-                <CustomButton
-                  title="Call"
-                  margin={4}
-                  padding={2}
-                  onPress={() => {
-                    Linking.openURL(`tell://${userData.phone}`);
-                  }}
-                />
-                <CustomButton
-                  title="Reject"
-                  titleColor={Colors.purewhite}
-                  color={Colors.blood}
-                  margin={4}
-                  padding={2}
-                  onPress={() => rejectRequest(item.item._id)}
-                />
-              </SimpleCard>
+              
             </SimpleCard>
           )}
           ListEmptyComponent={() => (
@@ -149,6 +132,24 @@ const MyProfile = ({ navigation, route }) => {
                 <Text>{item.item.hospital}</Text>
                 <Text>{`Units required:  ${item.item.units}`}</Text>
               </View>
+              <SimpleCard>
+                <CustomButton
+                  title="Call"
+                  margin={3}
+                  padding={1}
+                  onPress={() => {
+                    Linking.openURL(`tell://${userData.phone}`);
+                  }}
+                />
+                <CustomButton
+                  title="Reject"
+                  titleColor={Colors.purewhite}
+                  color={Colors.blood}
+                  margin={3}
+                  padding={1}
+                  onPress={() => rejectRequest(item.item._id)}
+                />
+              </SimpleCard>
             </SimpleCard>
           )}
           ListEmptyComponent={() => (
