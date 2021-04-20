@@ -28,7 +28,7 @@ const RequestDetailsScreen = ({ navigation, route }) => {
             "Thank you for volunteering, we have registered your request to donate."
           );
         } else {
-          console.warn("Houston, we have a problem");
+          alert(`There has been an error with the request : ${response.data}`);
           // console.log(response.data);
           // raise and error
         }
