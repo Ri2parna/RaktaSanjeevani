@@ -107,7 +107,6 @@ const MyProfile = ({ navigation, route }) => {
                   item.item.validity
                 ).calendar()}`}</Text>
               </View>
-              
             </SimpleCard>
           )}
           ListEmptyComponent={() => (
@@ -138,7 +137,7 @@ const MyProfile = ({ navigation, route }) => {
                   margin={3}
                   padding={1}
                   onPress={() => {
-                    Linking.openURL(`tell://${userData.phone}`);
+                    Linking.openURL(`tel://${userData.phone}`);
                   }}
                 />
                 <CustomButton
