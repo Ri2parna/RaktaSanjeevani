@@ -69,6 +69,7 @@ const NewRequest = ({ navigation, route }) => {
           alert("Success");
           navigation.navigate("Home");
         } else {
+          console.log(response.data);
           console.warn("Houston, there has been an error");
         }
       });

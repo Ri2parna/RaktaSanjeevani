@@ -6,7 +6,7 @@ import AppStack from "./app/screens/AppStack";
 import AuthStack from "./app/screens/AuthStack";
 
 import UserContext from "./app/hooks/userContext";
-import { getData, removeData } from "./app/utils/asyncStorage";
+import { getData, storeData, removeData } from "./app/utils/asyncStorage";
 
 export default function App() {
   const [uid, setUid] = useState();
@@ -20,13 +20,20 @@ export default function App() {
   const [phone, setPhone] = useState();
 
   useEffect(() => {
-    getData("uid").then((uid) => {
-      setUid(uid);
-    });
     getData("isSignedIn")
-      .then((data) => setIsSignedIn(data))
-      // .then(() => removeData("isSignedIn"))
-      // .then(() => setIsSignedIn(false))
+      .then((result) => {
+        if (typeof result == "boolean" && result == false) {
+          console.log(`boolean mila, wobhi false wala`, typeof result);
+        } else {
+          console.log(`data me ${result} mila`);
+          console.log("user signed in hai, janneka de re baba");
+          getData("uid").then((uid) => {
+            setUid(uid);
+            setIsSignedIn(true);
+            console.log(`Uid ${uid} obtained from storage`);
+          });
+        }
+      })
       .then(() => setLoading(false));
   }, []);
 

@@ -84,16 +84,29 @@ const VerifyOTPScreen = ({ navigation }) => {
         .then((response) => {
           // response.ok == user is not registered earlier
           // response.problem == user is already registered
-
           if (response.ok) {
             navigation.navigate("Register", { phoneNumber });
           } else {
-            setUid(response.data.uid);
-            if (uid !== null) {
-              storeData("isSignedIn", true);
-              storeData("uid", uid);
-              navigation.navigate("AppStack", { name: "Home" });
-            }
+            console.log(
+              `User is already registered with uid value of ${response.data.uid}`
+            );
+            console.log("Storing isSignedIn into async store");
+            storeData("isSignedIn", true)
+              .then(() => {
+                console.log("Storing uid into the async store");
+                storeData("uid", response.data.uid);
+                setUid(response.data.uid);
+              })
+              .then(() => {
+                console.log(
+                  `Getting the uid state data after setting the uid value: ${uid}`
+                );
+              })
+              .then(() => {
+                if (uid !== null) {
+                  navigation.navigate("AppStack", { name: "Home" });
+                }
+              });
           }
         });
     } catch (err) {

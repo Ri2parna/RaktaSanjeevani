@@ -87,6 +87,11 @@ const HomeScreen = ({ navigation, route }) => {
   );
 
   useEffect(() => {
+    console.log("====================================");
+    console.log("Entering HomeScreen=================");
+    console.log(`Loading context variables`);
+    console.log(uid);
+    console.log("====================================");
     if (!uid) {
       console.warn("Uid isn't valid or not found, please check");
       removeData("isSignedIn");

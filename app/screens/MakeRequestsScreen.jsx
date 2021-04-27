@@ -154,7 +154,11 @@ const DonorCard = ({
 }) => {
   return (
     <TouchableOpacity
-      style={[styles.container, styles.shadow, { marginBottom: 4 }]}
+      style={[
+        styles.container,
+        styles.shadow,
+        { marginBottom: 4, maxWidth: "100%" },
+      ]}
       onPress={onPress}
     >
       <View style={styles.image} />
@@ -163,6 +167,8 @@ const DonorCard = ({
           margin: 4,
           padding: 4,
           flexShrink: 1,
+          flexBasis: "50%",
+          flexDirection: "column",
         }}
       >
         <Title size={18}>{name}</Title>
