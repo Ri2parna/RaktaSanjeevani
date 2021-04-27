@@ -96,7 +96,7 @@ const MakeRequestsScreen = ({ navigation, city = "Tezpur" }) => {
           renderItem={({ item }) => (
             <DonorCard
               {...item}
-              onPress={() => navigation.navigate("Profile", { uid })}
+              onPress={() => navigation.navigate("Profile", { uid: item._id })}
             />
           )}
           keyExtractor={(item, index) => item._id}
