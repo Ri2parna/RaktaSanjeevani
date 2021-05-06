@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Switch } from "react-native-gesture-handler";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { ScrollView, Switch } from "react-native-gesture-handler";
 import CustomTextInput from "../../components/CustomTextInput";
 import { FemaleLogo } from "../../components/FemaleLogo";
 import { GradientButton } from "../../components/GradientButton";
 import { MaleLogo } from "../../components/MaleLogo";
+import SubTitle from "../../components/SubTitle";
 import { TextBubble } from "../../components/TextBubble";
 import Title from "../../components/Title";
 import Colors from "../../config/colors";
@@ -43,7 +44,7 @@ const RegisterScreen = ({ navigation, route }) => {
       });
   };
   return (
-    <View style={styles.screen}>
+    <ScrollView style={styles.screen}>
       <Title margin={4} padding={4} paddingV={8}>
         Enter Name:
       </Title>
@@ -145,23 +146,22 @@ const RegisterScreen = ({ navigation, route }) => {
       </View>
       <View style={{ flexDirection: "row" }}>
         <Switch
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+          trackColor={{ false: "#767577", true: Colors.blood }}
+          thumbColor={isEnabled ? "salmon" : "white"}
           ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch}
           value={isEnabled}
         />
-        <Title padding={12}>
+        <SubTitle>
           Do you want to make you contact number visible for others?
-        </Title>
+        </SubTitle>
       </View>
-      <View style={{ flex: 1 }} />
       <GradientButton
         title="SUBMIT"
         paddingV={16}
         onPress={() => handleSubmit()}
       />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -170,8 +170,9 @@ export default RegisterScreen;
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: Colors.purewhite,
+    height: Dimensions.get("window").height,
+    width: Dimensions.get("window").width,
     paddingHorizontal: 8,
     paddingBottom: 12,
-    height: "100%",
   },
 });

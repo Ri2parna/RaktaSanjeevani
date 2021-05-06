@@ -53,7 +53,7 @@ const MakeRequestsScreen = ({ navigation, city = "Tezpur" }) => {
               </SubTitle>
             </View>
             <CustomButton
-              title="Add Request"
+              title="New Request"
               icon="add"
               iconColor={Colors.blood}
               onPress={() => navigation.navigate("NewRequest")}

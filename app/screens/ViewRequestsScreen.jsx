@@ -9,7 +9,6 @@ import {
 import { FlatList } from "react-native-gesture-handler";
 import Title from "../components/Title";
 import SubTitle from "../components/SubTitle";
-import Screen from "../components/Screen";
 import Colors from "../config/colors";
 import { api } from "../config/endpoints";
 import { TextBubble } from "../components/TextBubble";
@@ -22,6 +21,7 @@ const ViewRequestsScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    navigation.setOptions({ title: "Active requests in your area" });
     api
       .get("/request/" + cityName)
       .then((response) => {
@@ -31,6 +31,9 @@ const ViewRequestsScreen = ({ navigation }) => {
       })
       .then(() => setLoading(false));
   }, []);
+  if (loading) {
+    return <ActivityIndicator size={64} color="salmon" />;
+  }
   return (
     <FlatList
       contentContainerStyle={[

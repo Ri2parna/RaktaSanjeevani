@@ -1,12 +1,6 @@
 // This will display profile details about the registered user
 import React, { useState, useEffect, useContext } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  Dimensions,
-} from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import SubTitle from "../components/SubTitle";
 import { TextBubble } from "../components/TextBubble";
 import { CustomButton } from "../components/CustomButton";
@@ -69,106 +63,30 @@ const MyProfile = ({ navigation, route }) => {
   } else {
     return (
       <View style={[styles.screen, { padding: 8 }]}>
-        <SimpleCard row>
-          <TextBubble
-            placeholder={userData?.bloodType}
-            padding={16}
-            margin={12}
-            selected
-          />
-          <View style={{ flex: 1 }}>
-            <Title>{userData.name}</Title>
-            <SubTitle>{userData.currentLocation}</SubTitle>
-            <SubTitle>{`Verification Status: ${
-              userData.verified ? "verified" : "Not Verified"
-            }`}</SubTitle>
-          </View>
-        </SimpleCard>
+        <UserCard {...userData} />
         <Title>Last Donated on: </Title>
         <SimpleCard style={[styles.center]}>
           <SubTitle>{lastDonated}</SubTitle>
         </SimpleCard>
-        <Title>Created Requests: </Title>
-        <FlatList
-          data={createdRequests}
-          keyExtractor={(item, index) => item._id}
-          renderItem={(item) => (
-            <SimpleCard row>
-              <TextBubble
-                placeholder={item.item.bloodType}
-                padding={8}
-                selected
-              />
-              <View style={{ flex: 1, padding: 4 }}>
-                <Text>{item.item.patientName}</Text>
-                <Text>{item.item.hospital}</Text>
-                <Text>{`Units required:  ${item.item.units}`}</Text>
-                <Text>{`Valid till: ${moment(
-                  item.item.validity
-                ).calendar()}`}</Text>
-              </View>
-            </SimpleCard>
-          )}
-          ListEmptyComponent={() => (
-            <SimpleCard>
-              <Text>User hasn't created any requests in the past</Text>
-            </SimpleCard>
-          )}
-        />
         <Title>Accepted Requests: </Title>
         <FlatList
           data={acceptedRequests}
           keyExtractor={(item, index) => item._id}
-          renderItem={(item) => (
-            <SimpleCard row>
-              <TextBubble
-                placeholder={item.item.bloodType}
-                padding={8}
-                selected
-              />
-              <View style={{ flex: 1, padding: 4 }}>
-                <Text>{item.item.patientName}</Text>
-                <Text>{item.item.hospital}</Text>
-                <Text>{`Units required:  ${item.item.units}`}</Text>
-              </View>
-              <SimpleCard>
-                <CustomButton
-                  title="Call"
-                  margin={3}
-                  padding={1}
-                  onPress={() => {
-                    Linking.openURL(`tel://${userData.phone}`);
-                  }}
-                />
-                <CustomButton
-                  title="Reject"
-                  titleColor={Colors.purewhite}
-                  color={Colors.blood}
-                  margin={3}
-                  padding={1}
-                  onPress={() => rejectRequest(item.item._id)}
-                />
-              </SimpleCard>
-            </SimpleCard>
-          )}
-          ListEmptyComponent={() => (
-            <SimpleCard>
-              <Text>User hasn't created any requests in the past</Text>
-            </SimpleCard>
-          )}
+          style={{ minHeight: "22%" }}
+          renderItem={(item) =>
+            AcceptedRequestCard(item, userData, rejectRequest)
+          }
+          ListEmptyComponent={() => EmptyContainer}
         />
-        <CustomButton
-          title="SignOut"
-          color={Colors.bloodRed}
-          titleColor={Colors.purewhite}
-          margin={8}
-          onPress={() => {
-            removeData("uid").then(() => {
-              setUid(null);
-            });
-            removeData("isSignedIn");
-          }}
+        <Title>Created Requests: </Title>
+        <FlatList
+          data={createdRequests}
+          keyExtractor={(item, index) => item._id}
+          renderItem={(item) => <CreatedRequestCard {...item} />}
+          ListEmptyComponent={() => EmptyContainer}
         />
+
+        <SignOutButton {...setUid} />
       </View>
     );
   }
@@ -183,3 +101,86 @@ const styles = StyleSheet.create({
   },
   center: { alignItems: "center", justifyContent: "center" },
 });
+
+const EmptyContainer = (
+  <SimpleCard>
+    <Text>User hasn't created any requests in the past</Text>
+  </SimpleCard>
+);
+
+const UserCard = ({ name, verified, currentLocation, bloodType }) => {
+  return (
+    <SimpleCard row>
+      <TextBubble placeholder={bloodType} padding={16} margin={12} selected />
+      <View style={{ flex: 1 }}>
+        <Title>{name}</Title>
+        <SubTitle>{currentLocation}</SubTitle>
+        <SubTitle>{`Verification Status: ${
+          verified ? "verified" : "Not Verified"
+        }`}</SubTitle>
+      </View>
+    </SimpleCard>
+  );
+};
+const CreatedRequestCard = ({
+  item: { bloodType, patientName, hospital, units, validity },
+}) => {
+  return (
+    <SimpleCard row>
+      <TextBubble placeholder={bloodType} padding={8} selected />
+      <View style={{ flex: 1, padding: 4 }}>
+        <Text>{patientName}</Text>
+        <Text>{hospital}</Text>
+        <Text>{`Units required:  ${units}`}</Text>
+        <Text>{`Valid till: ${moment(validity).calendar()}`}</Text>
+      </View>
+    </SimpleCard>
+  );
+};
+function SignOutButton(setUid) {
+  return (
+    <CustomButton
+      title="SignOut"
+      color={Colors.bloodRed}
+      titleColor={Colors.purewhite}
+      margin={8}
+      onPress={() => {
+        removeData("uid").then(() => {
+          setUid(null);
+        });
+        removeData("isSignedIn");
+      }}
+    />
+  );
+}
+
+function AcceptedRequestCard(item, userData, rejectRequest) {
+  return (
+    <SimpleCard row>
+      <TextBubble placeholder={item.item.bloodType} padding={8} selected />
+      <View style={{ flex: 1, padding: 4 }}>
+        <Text>{item.item.patientName}</Text>
+        <Text>{item.item.hospital}</Text>
+        <Text>{`Units required:  ${item.item.units}`}</Text>
+      </View>
+      <SimpleCard>
+        <CustomButton
+          title="Call"
+          margin={3}
+          padding={1}
+          onPress={() => {
+            Linking.openURL(`tel://${userData.phone}`);
+          }}
+        />
+        <CustomButton
+          title="Reject"
+          titleColor={Colors.purewhite}
+          color={Colors.blood}
+          margin={3}
+          padding={1}
+          onPress={() => rejectRequest(item.item._id)}
+        />
+      </SimpleCard>
+    </SimpleCard>
+  );
+}

@@ -11,6 +11,7 @@ const SubTitle = ({ children, padding = 0, size = 14, color, ...props }) => {
         color: color,
         fontSize: size,
         textTransform: "capitalize",
+        flexWrap: "wrap",
       }}
     >
       {children}

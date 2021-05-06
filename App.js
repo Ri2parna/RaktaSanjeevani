@@ -11,15 +11,14 @@ import { getData, storeData, removeData } from "./app/utils/asyncStorage";
 export default function App() {
   const [uid, setUid] = useState();
   const [loading, setLoading] = useState(true);
-  const [location, setLocation] = useState({
-    latitude: 26.6998045, // default location is set to Patkai
-    longitude: 92.8358069,
-  });
+  const [location, setLocation] = useState();
   const [cityName, setCityName] = useState(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [phone, setPhone] = useState();
 
   useEffect(() => {
+    console.log("x====================================");
+    console.log("App.js");
     getData("isSignedIn")
       .then((result) => {
         if (typeof result == "boolean" && result == false) {
@@ -31,6 +30,7 @@ export default function App() {
             setUid(uid);
             setIsSignedIn(true);
             console.log(`Uid ${uid} obtained from storage`);
+            console.log("====================================");
           });
         }
       })
@@ -46,9 +46,9 @@ export default function App() {
           uid,
           location,
           cityName,
+          phone,
           setUid,
           setLocation,
-          phone,
           setPhone,
           setCityName,
         }}

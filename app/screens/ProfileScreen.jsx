@@ -1,13 +1,15 @@
 // This will display profile details about the registered user
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ActivityIndicator, Text } from "react-native";
+import moment from "moment";
+import { FlatList } from "react-native-gesture-handler";
+
 import SubTitle from "../components/SubTitle";
 import { TextBubble } from "../components/TextBubble";
 import Title from "../components/Title";
 import Colors from "../config/colors";
 import { api } from "../config/endpoints";
-import moment from "moment";
-import { FlatList } from "react-native-gesture-handler";
+
 import { SimpleCard } from "../components/SimpleCard";
 
 const ProfileScreen = ({ navigation, route }) => {
@@ -30,7 +32,7 @@ const ProfileScreen = ({ navigation, route }) => {
       .then((response) => {
         if (response.ok) {
           if (response.data?.lastDonated == null) {
-            setLastDonated("Use hasn't donated blood before");
+            setLastDonated("User hasn't donated blood before");
           } else {
             setLastDonated(moment(response.data.lastDonated).toNow());
           }
