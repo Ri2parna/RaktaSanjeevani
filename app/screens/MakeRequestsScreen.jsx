@@ -1,10 +1,10 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { CustomButton } from "../components/CustomButton";
-import Screen from "../components/Screen";
+import { SimpleCard } from "../components/SimpleCard";
 import SubTitle from "../components/SubTitle";
 import { TextBubble } from "../components/TextBubble";
 import Title from "../components/Title";
@@ -18,94 +18,43 @@ const MakeRequestsScreen = ({ navigation, city = "Tezpur" }) => {
   const { uid, cityName } = useContext(UserContext);
   useEffect(() => {
     api.get("/requestcount/" + cityName).then((response) => {
-      if (response.ok) {
-        setRequestCount(response.data.count);
-      }
+      if (response.ok) setRequestCount(response.data.count);
     });
 
     api.get("/donors/" + cityName).then((response) => {
-      if (response.ok) {
-        setListOfDonors(response.data);
-      }
+      if (response.ok) setListOfDonors(response.data);
     });
   }, [cityName, uid]);
   return (
-    <Screen color={Colors.white}>
-      <View style={{ width: "100%", height: "100%" }}>
-        <LinearGradient
-          colors={["#ff4d4d", "#ff217a"]}
-          style={{
-            width: "100%",
-            minHeight: "24%",
-            maxHeight: "24%",
-            alignItems: "center",
-            flex: 1,
-          }}
-        >
-          <View style={styles.cta}>
-            <View style={{ alignItems: "center" }}>
-              <Title color={Colors.white} size={24}>
-                {requestCount}
-              </Title>
-              <SubTitle color={Colors.white}>Active Requests</SubTitle>
-              <SubTitle size={12} color={Colors.white}>
-                Nearby
-              </SubTitle>
-            </View>
-            <CustomButton
-              title="New Request"
-              icon="add"
-              iconColor={Colors.blood}
-              onPress={() => navigation.navigate("NewRequest")}
-              padding={8}
-            />
-          </View>
-        </LinearGradient>
-        <FlatList
-          contentContainerStyle={[
-            styles.shadow,
-            {
-              margin: 8,
-              padding: 8,
-              borderRadius: 4,
-              backgroundColor: Colors.purewhite,
-              minHeight: "100%",
-              paddingBottom: "28%",
-            },
-          ]}
-          ListHeaderComponent={() => (
-            <Title size={20} paddingV={8} padding={8} color="#0A0819">
-              Donors Nearby
+    <View style={{ width: "100%", height: "100%" }}>
+      <CallToAction requestCount={requestCount} navigation={navigation} />
+      <FlatList
+        ListHeaderComponent={() => (
+          <Title size={20} paddingV={8} padding={8} color="#0A0819">
+            Donors Nearby{" "}
+            <Title size={20} paddingV={8} padding={8} color="salmon">
+              {cityName}
             </Title>
-          )}
-          ListEmptyComponent={() => {
-            return (
-              <View
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <ActivityIndicator color={Colors.blood} size={60} />
-              </View>
-            );
-          }}
-          data={ListOfDonors}
-          renderItem={({ item }) => (
-            <DonorCard
-              {...item}
-              onPress={() => navigation.navigate("Profile", { uid: item._id })}
-            />
-          )}
-          keyExtractor={(item, index) => item._id}
-        />
-      </View>
-    </Screen>
+          </Title>
+        )}
+        ListEmptyComponent={EmptyContainer}
+        data={ListOfDonors}
+        renderItem={({ item }) => (
+          <DonorCard
+            {...item}
+            onPress={() => navigation.navigate("Profile", { uid: item._id })}
+          />
+        )}
+        keyExtractor={(item, index) => item._id}
+      />
+    </View>
   );
 };
-
+const EmptyContainer = (
+  <SimpleCard>
+    <Title>No data available</Title>
+  </SimpleCard>
+);
 export default MakeRequestsScreen;
 const styles = StyleSheet.create({
   container: {
@@ -178,82 +127,37 @@ const DonorCard = ({
     </TouchableOpacity>
   );
 };
-/*
 
-    <FlatList
-      contentContainerStyle={
-        ([styles.shadow],
-        {
-          padding: 8,
-          borderRadius: 4,
-          backgroundColor: "salmon",
-          height: "100%",
-        })
-      }
-      ListHeaderComponent={() => (
-        <View>
-          <Title size={20} paddingV={8} padding={8} color="#0A0819">
-            Donors Nearby
-          </Title>
-          <View style={{ alignItems: "center" }}>
-            <Title color={Colors.white} size={24}>
-              {requestCount}
-            </Title>
-            <SubTitle color={Colors.white}>Active Requests</SubTitle>
-            <SubTitle size={12} color={Colors.white}>
-              Nearby
-            </SubTitle>
-          </View>
-        </View>
-      )}
-      ListEmptyComponent={() => {
-        return (
-          <View style={styles.center}>
-            <ActivityIndicator color={Colors.blood} size={60} />
-          </View>
-        );
+const CallToAction = ({ requestCount, navigation }) => {
+  return (
+    <LinearGradient
+      colors={["#ff4d4d", "#ff217a"]}
+      style={{
+        width: "100%",
+        minHeight: "24%",
+        maxHeight: "24%",
+        alignItems: "center",
+        flex: 1,
       }}
-      data={ListOfDonors}
-      renderItem={({ item }) => (
-        <DonorCard
-          {...item}
-          onPress={() => navigation.navigate("Profile", { uid })}
+    >
+      <View style={styles.cta}>
+        <View style={{ alignItems: "center" }}>
+          <Title color={Colors.white} size={24}>
+            {requestCount}
+          </Title>
+          <SubTitle color={Colors.white}>Active Requests</SubTitle>
+          <SubTitle size={12} color={Colors.white}>
+            Nearby
+          </SubTitle>
+        </View>
+        <CustomButton
+          title="New Request"
+          icon="add"
+          iconColor={Colors.blood}
+          onPress={() => navigation.navigate("NewRequest")}
+          padding={8}
         />
-      )}
-      keyExtractor={(item, index) => item._id}
-    />
+      </View>
+    </LinearGradient>
   );
 };
-
-export default MakeRequestsScreen;
-
-/*
-
-<Screen color={Colors.white}>
-      <View style={{ width: "100%", height: "100%" }}>
-        <LinearGradient
-          colors={["#ff4d4d", "#ff217a"]}
-          style={{
-            width: "100%",
-            minHeight: "24%",
-            maxHeight: "24%",
-            alignItems: "center",
-            flex: 1,
-          }}
-        >
-          <View style={styles.cta}>
-            
-            <CustomButton
-              title="Add Request"
-              icon="add"
-              iconColor={Colors.blood}
-              onPress={() => navigation.navigate("NewRequest")}
-              padding={8}
-            />
-          </View>
-        </LinearGradient>
-        
-      </View>
-    </Screen>
-
-    */

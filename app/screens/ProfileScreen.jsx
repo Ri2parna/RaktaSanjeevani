@@ -11,6 +11,7 @@ import Colors from "../config/colors";
 import { api } from "../config/endpoints";
 
 import { SimpleCard } from "../components/SimpleCard";
+import { UserCard } from "../components/UserCard";
 
 const ProfileScreen = ({ navigation, route }) => {
   const [userData, setUserData] = useState(null);
@@ -36,6 +37,7 @@ const ProfileScreen = ({ navigation, route }) => {
           } else {
             setLastDonated(moment(response.data.lastDonated).toNow());
           }
+
           setUserData(response.data);
           SetCreatedRequests(response.data.createdRequests);
           setAcceptedrequests(response.data.acceptedRequests);
@@ -48,32 +50,13 @@ const ProfileScreen = ({ navigation, route }) => {
       .then(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return (
-      <View style={[styles.screen, styles.center]}>
-        <ActivityIndicator color={Colors.success} size={60} />
-      </View>
-    );
-  } else {
+  if (loading) return <LoadingScreen />;
+  else {
     return (
       <View style={[styles.screen, { padding: 8 }]}>
-        <Container row>
-          <TextBubble
-            placeholder={userData?.bloodType}
-            padding={16}
-            margin={12}
-            selected
-          />
-          <View>
-            <Title>{userData.name}</Title>
-            <SubTitle>{userData.currentLocation}</SubTitle>
-            <SubTitle>{`Verification Status: ${
-              userData.verified ? "verified" : "Not Verified"
-            }`}</SubTitle>
-          </View>
-        </Container>
+        <UserCard {...userData} />
         <Title>Last Donated on: </Title>
-        <Container style={[{ flex: 1 }, styles.center]}>
+        <Container style={[styles.center, { padding: 16, flex: 1 }]}>
           <SubTitle>{lastDonated}</SubTitle>
         </Container>
         <Title>Created Requests: </Title>
@@ -97,16 +80,13 @@ const ProfileScreen = ({ navigation, route }) => {
               </View>
             </SimpleCard>
           )}
-          ListEmptyComponent={() => (
-            <SimpleCard>
-              <Text>User hasn't created any requests in the past</Text>
-            </SimpleCard>
-          )}
+          ListEmptyComponent={EmptyComponent}
         />
         <Title>Accepted Requests: </Title>
         <FlatList
           data={acceptedRequests}
           keyExtractor={(item, index) => item._id}
+          style={{ minHeight: 120 }}
           renderItem={(item) => (
             <SimpleCard row>
               <TextBubble
@@ -121,11 +101,7 @@ const ProfileScreen = ({ navigation, route }) => {
               </View>
             </SimpleCard>
           )}
-          ListEmptyComponent={() => (
-            <SimpleCard>
-              <Text>User hasn't created any requests in the past</Text>
-            </SimpleCard>
-          )}
+          ListEmptyComponent={EmptyComponent}
         />
       </View>
     );
@@ -141,7 +117,21 @@ const styles = StyleSheet.create({
   },
   center: { alignItems: "center", justifyContent: "center" },
 });
+const EmptyComponent = () => {
+  return (
+    <SimpleCard>
+      <Text>No data available</Text>
+    </SimpleCard>
+  );
+};
 
+const LoadingScreen = () => {
+  return (
+    <View style={[styles.screen, styles.center]}>
+      <ActivityIndicator color={Colors.success} size={60} />
+    </View>
+  );
+};
 const Container = ({ children, style, row }) => {
   return (
     <View

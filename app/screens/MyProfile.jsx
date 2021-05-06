@@ -13,6 +13,7 @@ import { SimpleCard } from "../components/SimpleCard";
 import { FlatList } from "react-native-gesture-handler";
 import moment from "moment";
 import * as Linking from "expo-linking";
+import { UserCard } from "../components/UserCard";
 
 const MyProfile = ({ navigation, route }) => {
   const [userData, setUserData] = useState(null);
@@ -108,20 +109,6 @@ const EmptyContainer = (
   </SimpleCard>
 );
 
-const UserCard = ({ name, verified, currentLocation, bloodType }) => {
-  return (
-    <SimpleCard row>
-      <TextBubble placeholder={bloodType} padding={16} margin={12} selected />
-      <View style={{ flex: 1 }}>
-        <Title>{name}</Title>
-        <SubTitle>{currentLocation}</SubTitle>
-        <SubTitle>{`Verification Status: ${
-          verified ? "verified" : "Not Verified"
-        }`}</SubTitle>
-      </View>
-    </SimpleCard>
-  );
-};
 const CreatedRequestCard = ({
   item: { bloodType, patientName, hospital, units, validity },
 }) => {
