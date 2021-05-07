@@ -34,7 +34,11 @@ const NewRequest = ({ navigation, route }) => {
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
+    const currentDate = selectedDate
+      ? selectedDate > date
+        ? selectedDate
+        : date
+      : date;
     setShow(Platform.OS === "ios");
     setDate(currentDate);
   };
@@ -120,81 +124,80 @@ const NewRequest = ({ navigation, route }) => {
           />
         )}
       </View>
-      <Title size={20} padding={16}>
-        Select Blood Group
-      </Title>
-      <SimpleCard row flexStart>
-        <TextBubble
-          placeholder="A+"
-          padding={16}
-          margin={4}
-          onPress={() => setBloodType("A+")}
-          selected={bloodType == "A+"}
-        />
-        <TextBubble
-          placeholder="A-"
-          padding={16}
-          margin={4}
-          onPress={() => setBloodType("A-")}
-          selected={bloodType == "A-"}
-        />
-        <TextBubble
-          placeholder="B-"
-          padding={16}
-          margin={4}
-          onPress={() => setBloodType("B-")}
-          selected={bloodType == "B-"}
-        />
-        <TextBubble
-          placeholder="B+"
-          padding={16}
-          margin={4}
-          onPress={() => setBloodType("B+")}
-          selected={bloodType == "B+"}
-        />
-        <TextBubble
-          placeholder="O+"
-          padding={16}
-          margin={4}
-          onPress={() => setBloodType("O+")}
-          selected={bloodType == "O+"}
-        />
-        <TextBubble
-          placeholder="O-"
-          padding={16}
-          margin={4}
-          onPress={() => setBloodType("O-")}
-          selected={bloodType == "O-"}
-        />
-        <TextBubble
-          placeholder="AB+"
-          padding={16}
-          margin={4}
-          onPress={() => setBloodType("AB+")}
-          selected={bloodType == "AB+"}
-        />
-        <TextBubble
-          placeholder="AB-"
-          padding={16}
-          margin={4}
-          onPress={() => setBloodType("AB-")}
-          selected={bloodType == "AB-"}
-        />
+      <SimpleCard flexStart row>
+        <Title padding={16}>Select Blood Group</Title>
+        <SimpleCard row flexStart>
+          <TextBubble
+            placeholder="A+"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("A+")}
+            selected={bloodType == "A+"}
+          />
+          <TextBubble
+            placeholder="A-"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("A-")}
+            selected={bloodType == "A-"}
+          />
+          <TextBubble
+            placeholder="B-"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("B-")}
+            selected={bloodType == "B-"}
+          />
+          <TextBubble
+            placeholder="B+"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("B+")}
+            selected={bloodType == "B+"}
+          />
+          <TextBubble
+            placeholder="O+"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("O+")}
+            selected={bloodType == "O+"}
+          />
+          <TextBubble
+            placeholder="O-"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("O-")}
+            selected={bloodType == "O-"}
+          />
+          <TextBubble
+            placeholder="AB+"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("AB+")}
+            selected={bloodType == "AB+"}
+          />
+          <TextBubble
+            placeholder="AB-"
+            padding={16}
+            margin={4}
+            onPress={() => setBloodType("AB-")}
+            selected={bloodType == "AB-"}
+          />
+        </SimpleCard>
       </SimpleCard>
-      <Title size={24} padding={16}>
-        Gender
-      </Title>
       <SimpleCard row flexStart>
-        <MaleLogo
-          selected={gender == "male"}
-          onPress={() => setGender("male")}
-        />
-        <FemaleLogo
-          selected={gender == "female"}
-          onPress={() => setGender("female")}
-        />
+        <Title padding={16}>Gender</Title>
+        <SimpleCard row flexStart>
+          <MaleLogo
+            selected={gender == "male"}
+            onPress={() => setGender("male")}
+          />
+          <FemaleLogo
+            selected={gender == "female"}
+            onPress={() => setGender("female")}
+          />
+        </SimpleCard>
       </SimpleCard>
-      <View style={{ flex: 1 }} />
       <GradientButton
         title="SUBMIT"
         margin={8}
@@ -203,6 +206,7 @@ const NewRequest = ({ navigation, route }) => {
           submitBloodRequest();
         }}
       />
+
       <SimpleCard flexStart row>
         <SubTitle size={12} padding={8} color={Colors["grey-6"]}>
           * Your location will be recorded for this request

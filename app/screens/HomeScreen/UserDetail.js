@@ -13,13 +13,17 @@ import { useNavigation } from "@react-navigation/native";
 export const UserDetail = ({
   currentLocation,
   name,
-  active,
+  active = true,
   updateLocation,
+  toggleActiveStatus,
 }) => {
   const navigation = useNavigation();
   // switch
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const [isEnabled, setIsEnabled] = useState(active);
+  const toggleSwitch = () => {
+    setIsEnabled((previousState) => !previousState);
+    toggleActiveStatus();
+  };
 
   return (
     <View style={{ flex: 2, paddingHorizontal: 4 }}>
@@ -58,10 +62,10 @@ export const UserDetail = ({
         </SubTitle>
         <Switch
           trackColor={{ false: Colors.darkBlue, true: "salmon" }}
-          thumbColor={active ? Colors.bloodRed : "aliceblue"}
+          thumbColor={isEnabled ? Colors.bloodRed : "aliceblue"}
           ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch}
-          value={active}
+          value={isEnabled}
         />
       </SimpleCard>
     </View>

@@ -67,6 +67,11 @@ const HomeScreen = ({ navigation, route }) => {
     });
   };
 
+  const toggleActiveStatus = () => {
+    api
+      .patch("/user", { uid, active: userData.active })
+      .catch((err) => console.log(err));
+  };
   useEffect(() => {
     if (!uid) removeData("isSignedIn");
     onRefresh();
@@ -99,7 +104,11 @@ const HomeScreen = ({ navigation, route }) => {
       }
     >
       <CallToAction donorCount={donorCount} requestCount={requestCount} />
-      <UserDetail {...userData} updateLocation={handleGPSupdate} />
+      <UserDetail
+        {...userData}
+        updateLocation={handleGPSupdate}
+        toggleActiveStatus={toggleActiveStatus}
+      />
     </ScrollView>
   );
 };
