@@ -1,6 +1,13 @@
 // This will display profile details about the registered user
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+  BackHandler,
+} from "react-native";
 import SubTitle from "../components/SubTitle";
 import { TextBubble } from "../components/TextBubble";
 import { CustomButton } from "../components/CustomButton";
@@ -87,7 +94,7 @@ const MyProfile = ({ navigation, route }) => {
           ListEmptyComponent={() => EmptyContainer}
         />
 
-        <SignOutButton {...setUid} />
+        <SignOutButton />
       </View>
     );
   }
@@ -110,8 +117,21 @@ const EmptyContainer = (
 );
 
 const CreatedRequestCard = ({
-  item: { bloodType, patientName, hospital, units, validity },
+  index,
+  item: { _id, bloodType, patientName, hospital, units, validity },
 }) => {
+  const deleteRequest = () => {
+    api
+      .delete("/request", { rid: _id })
+      .then((response) => {
+        if (response.ok) {
+          alert("Request deleted succesfullly");
+        } else {
+          alert("Error deleting request");
+        }
+      })
+      .catch((err) => console.log("failed to delete request", err));
+  };
   return (
     <SimpleCard row>
       <TextBubble placeholder={bloodType} padding={8} selected />
@@ -121,10 +141,24 @@ const CreatedRequestCard = ({
         <Text>{`Units required:  ${units}`}</Text>
         <Text>{`Valid till: ${moment(validity).calendar()}`}</Text>
       </View>
+      <SimpleCard>
+        <CustomButton
+          title="Delete"
+          titleColor={Colors.purewhite}
+          color={Colors.blood}
+          margin={3}
+          padding={1}
+          onPress={() => {
+            deleteRequest(_id);
+          }}
+        />
+      </SimpleCard>
     </SimpleCard>
   );
 };
-function SignOutButton(setUid) {
+
+function SignOutButton() {
+  const { setUid } = useContext(UserContext);
   return (
     <CustomButton
       title="SignOut"
@@ -135,7 +169,11 @@ function SignOutButton(setUid) {
         removeData("uid").then(() => {
           setUid(null);
         });
-        removeData("isSignedIn");
+        removeData("isSignedIn").then(
+          Alert.alert("Succesfully logged out", "press OK to close the app", [
+            { text: "YES", onPress: () => BackHandler.exitApp() },
+          ])
+        );
       }}
     />
   );

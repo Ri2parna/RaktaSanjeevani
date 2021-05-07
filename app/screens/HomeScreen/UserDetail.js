@@ -57,8 +57,11 @@ export const UserDetail = ({
       </SimpleCard>
       <Title margin={4}>Active Status</Title>
       <SimpleCard row>
-        <SubTitle size={14} color={active ? Colors.success : Colors["grey-8"]}>
-          {active ? "Active" : "InActive"}
+        <SubTitle
+          size={14}
+          color={isEnabled ? Colors.success : Colors["grey-8"]}
+        >
+          {isEnabled ? "Active" : "InActive"}
         </SubTitle>
         <Switch
           trackColor={{ false: Colors.darkBlue, true: "salmon" }}

@@ -68,6 +68,7 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   const toggleActiveStatus = () => {
+    console.log("toggleing active status with uid", uid, userData.active);
     api
       .patch("/user", { uid, active: userData.active })
       .catch((err) => console.log(err));
