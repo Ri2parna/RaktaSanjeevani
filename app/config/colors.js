@@ -12,7 +12,6 @@ const Colors = {
   green: "#36B37E",
   blue: "#00B8D9",
   purple: "#6554C0",
-  blue: "#0052CC",
   darkBlue: "#172B4D",
   "grey-1": "#B3BAC5",
   "grey-2": "#A5ADBA",

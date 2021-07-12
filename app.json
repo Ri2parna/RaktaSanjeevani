@@ -23,8 +23,13 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
+        "config": {
+            "googleMaps": {
+                "apiKey": "AIzaSyD6tN5Dohg9RS6gDpnTxS7xqpLvanRPYcE"
+            }
+        }
       },
-      "package": "com.rituparna.RaktaSanjeevani"
+      "package": "com.test.hackathon"
     },
     "web": {
       "favicon": "./assets/favicon.png"
