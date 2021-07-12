@@ -64,7 +64,7 @@ const RequestDetailsScreen = ({ navigation, route }) => {
         <View style={{ flex: 1 }}>
           <Title size={20}>Patient Details</Title>
           <SimpleCard row justifyStart>
-            <TextBubble placeholder={"AB-"} selected padding={16} margin={8} />
+            <TextBubble placeholder={requestData?.bloodType} selected padding={16} margin={8} />
             <View style={{ flex: 1 }}>
               <Title size={20} color={Colors.blood}>
                 {requestData?.patientName}
