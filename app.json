@@ -20,14 +20,14 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF",
-        "config": {
+	"config": {
             "googleMaps": {
                 "apiKey": "AIzaSyD6tN5Dohg9RS6gDpnTxS7xqpLvanRPYcE"
             }
-        }
+        },
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
       },
       "package": "com.test.hackathon"
     },
