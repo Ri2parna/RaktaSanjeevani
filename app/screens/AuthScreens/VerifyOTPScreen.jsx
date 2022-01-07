@@ -178,7 +178,7 @@ const VerifyOTPScreen = ({ navigation }) => {
             ? [styles.textInput, styles.editable]
             : styles.textInput
         }
-        editable={!!verificationId}
+        // editable={!!verificationId}
         keyboardType="phone-pad"
         placeholder="12XXXX"
         onChangeText={(verificationCode) =>
