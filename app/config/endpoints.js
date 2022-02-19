@@ -10,8 +10,6 @@
 
 import { create } from "apisauce";
 
-const api = create({
+export const api = create({
   baseURL: "https://test-raktasanjeevani.herokuapp.com",
 });
-
-module.exports = { api };

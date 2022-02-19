@@ -1,15 +1,17 @@
 import React, { useContext, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { ScrollView, Switch } from "react-native-gesture-handler";
-import CustomTextInput from "../../components/CustomTextInput";
-import { FemaleLogo } from "../../components/FemaleLogo";
-import { GradientButton } from "../../components/GradientButton";
-import { MaleLogo } from "../../components/MaleLogo";
-import SubTitle from "../../components/SubTitle";
-import { TextBubble } from "../../components/TextBubble";
-import Title from "../../components/Title";
-import Colors from "../../config/colors";
-import { api } from "../../config/endpoints";
+
+import { MaleLogo, FemaleLogo } from "../../components/logo";
+import {
+  Title,
+  SubTitle,
+  TextBubble,
+  GradientButton,
+  CustomTextInput,
+} from "../../components";
+
+import { api, Colors } from "../../config";
 import UserContext from "../../hooks/userContext";
 import { storeData } from "../../utils/asyncStorage";
 

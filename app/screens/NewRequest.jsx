@@ -12,8 +12,8 @@ import UserContext from "../hooks/userContext";
 import TransDarkLogo from "../assets/transUserDark.svg";
 import { TextBubble } from "../components/TextBubble";
 import { GradientButton } from "../components/GradientButton";
-import { MaleLogo } from "../components/MaleLogo";
-import { FemaleLogo } from "../components/FemaleLogo";
+import { MaleLogo, FemaleLogo } from "../components/logo";
+
 import { ScrollView } from "react-native-gesture-handler";
 import SubTitle from "../components/SubTitle";
 import { CustomButton } from "../components/CustomButton";

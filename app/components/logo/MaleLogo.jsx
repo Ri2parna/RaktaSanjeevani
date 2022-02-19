@@ -1,10 +1,11 @@
 import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { LinearGradient } from "expo-linear-gradient";
-import Colors from "../config/colors";
-import WhiteMaleLogo from "../assets/maleUserWhite.svg";
-import DarkMaleLogo from "../assets/maleUserDark.svg";
 import { StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { TouchableOpacity } from "react-native-gesture-handler";
+
+import { Colors } from "../../config";
+import WhiteMaleLogo from "../../assets/maleUserWhite.svg";
+import DarkMaleLogo from "../../assets/maleUserDark.svg";
 
 export const MaleLogo = ({ selected, onPress }) => {
   return (

@@ -1,8 +1,8 @@
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
-import Colors from "../config/colors";
-import FemaleDarkLogo from "../assets/femaleUserDark.svg";
+import Colors from "../../config/colors";
+import FemaleDarkLogo from "../../assets/femaleUserDark.svg";
 import { StyleSheet } from "react-native";
 
 export const FemaleLogo = ({ selected, onPress }) => {
