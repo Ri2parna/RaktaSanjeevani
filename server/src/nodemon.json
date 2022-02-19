@@ -1,0 +1,5 @@
+{
+  "watch": [],
+  "verbose": true,
+  "ignore": ["*.test.js", "*.spec.js"]
+}
